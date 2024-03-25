@@ -67,3 +67,36 @@ if(isset($_GET['eliminar_tutor'])) {
 
     header("Location: listado_tutores.php");
 }
+
+// Alta de Materias
+if(isset($_POST['alta_materia'])) {
+    $nombre = $_POST['nombre'];
+    $carrera = $_POST['carrera'];
+
+    $sql = "INSERT INTO materias (nombre, id_carrera) VALUES ('$nombre', '$carrera')";
+    $result = $conn->query($sql);
+
+    header("Location: listado_materias.php");
+}
+
+// Cambio de Materia
+if(isset($_POST['cambio_materia'])) {
+    $id = $_POST['id_materia'];
+    $nombre = $_POST['nombre'];
+    $carrera = $_POST['carrera'];
+
+    $sql = "UPDATE materias SET nombre='$nombre', id_carrera='$carrera' WHERE id='$id'";
+    $result = $conn->query($sql);
+
+    header("Location: listado_materias.php");
+}
+
+// Eliminar Materia
+if(isset($_GET['eliminar_materia'])) {
+    $id = $_GET['eliminar_materia'];
+
+    $sql = "DELETE FROM materias WHERE id='$id'";
+    $result = $conn->query($sql);
+
+    header("Location: listado_materias.php");
+}

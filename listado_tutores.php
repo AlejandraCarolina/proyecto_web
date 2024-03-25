@@ -15,7 +15,7 @@ $result = $conn->query($sql);
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
 <body>
-<div class="container mt-5">
+<div class="container mt-5 mb-5">
     <a href="." class="btn btn-secondary mb-2">Regresar</a>
     <h2>Listado de Tutores</h2>
     <table class="table">
@@ -46,7 +46,7 @@ $result = $conn->query($sql);
         <?php endwhile; ?>
         </tbody>
     </table>
-    <a href="alta_tutor.php" class="btn btn-primary mb-5">Agregar Tutor</a>
+    <a href="alta_tutor.php" class="btn btn-primary">Agregar Tutor</a>
 </div>
 </body>
 </html>

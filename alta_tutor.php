@@ -14,7 +14,7 @@ $result = $conn->query($sql);
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
 <body>
-<div class="container mt-5">
+<div class="container mt-5 mb-5">
     <a href="listado_tutores.php" class="btn btn-secondary mb-2">Regresar</a>
     <h2>Alta de Tutor</h2>
     <form action="crud.php" method="POST">
@@ -39,14 +39,14 @@ $result = $conn->query($sql);
                 </div>
             <?php endwhile; ?>
         </div>
-        <button type="submit" class="btn btn-primary mb-5" name="alta_tutor" <?=$result->num_rows == 0 ? 'disabled' : '' ?>>Agregar Tutor</button>
+        <button type="submit" class="btn btn-primary" name="alta_tutor" <?=$result->num_rows == 0 ? 'disabled' : '' ?>>Agregar Tutor</button>
     </form>
 </div>
 </body>
 </html>
 
-<!-- Validar selección de carrera -->
 <script>
+    // Validar selección de carrera
     document.addEventListener("DOMContentLoaded", function() {
         document.querySelector('form').addEventListener('submit', function(event) {
             // Validamos que haya una carerera seleccionada
