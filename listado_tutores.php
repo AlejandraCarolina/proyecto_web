@@ -46,7 +46,7 @@ $result = $conn->query($sql);
         <?php endwhile; ?>
         </tbody>
     </table>
-    <a href="alta_tutores.php" class="btn btn-primary">Agregar Tutor</a>
+    <a href="alta_tutor.php" class="btn btn-primary">Agregar Tutor</a>
 </div>
 </body>
 </html>
