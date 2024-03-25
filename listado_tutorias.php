@@ -1,15 +1,15 @@
 <?php
 include 'conexion.php';
 
-// Consulta para obtener todos los registros de Materias
-$sql = "SELECT m.id, m.nombre, c.nombre AS 'nombre_carrera' FROM materias m JOIN carreras c ON m.id_carrera=c.id
-        ORDER BY m.id";
+// Consulta para obtener todos los registros de Tutorias
+$sql = "SELECT t.id, t.nombre, t.correo, c.nombre AS 'nombre_carrera' FROM tutores t
+            JOIN carreras c ON t.id_carrera = c.id ORDER BY t.id";
 $result = $conn->query($sql);
 ?>
 
 <html lang="es">
 <head>
-    <title>Materias</title>
+    <title>Tutorias</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
@@ -17,12 +17,13 @@ $result = $conn->query($sql);
 <body>
 <div class="container mt-5 mb-5">
     <a href="." class="btn btn-secondary mb-2">Regresar</a>
-    <h2>Listado de Materias</h2>
+    <h2>Listado de Tutores</h2>
     <table class="table">
         <thead>
         <tr>
             <th>ID</th>
             <th>Nombre</th>
+            <th>Correo</th>
             <th>Carrera</th>
             <th>Acciones</th>
         </tr>
@@ -33,9 +34,10 @@ $result = $conn->query($sql);
             <tr>
                 <td><?=$row['id']?></td>
                 <td><?=$row['nombre']?></td>
+                <td><?=$row['correo']?></td>
                 <td><?=$row['nombre_carrera']?></td>
                 <td>
-                    <a href="editar_carrera.php?id=<?=$row['id']?>" class="btn btn-info">Editar</a>
+                    <a href="editar_tutor.php?id=<?=$row['id']?>" class="btn btn-info">Editar</a>
                     <form class="d-inline-block" onsubmit="eliminar(event, <?=$row['id']?>)" method="POST">
                         <button type="submit" class="btn btn-danger">Eliminar</button>
                     </form>
@@ -44,7 +46,7 @@ $result = $conn->query($sql);
         <?php endwhile; ?>
         </tbody>
     </table>
-    <a href="alta_materia.php" class="btn btn-primary">Agregar Materia</a>
+    <a href="alta_tutor.php" class="btn btn-primary">Agregar Tutor</a>
 </div>
 </body>
 </html>
@@ -64,7 +66,7 @@ $result = $conn->query($sql);
             cancelButtonText: "Cancelar"
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = 'crud.php?eliminar_materia='+id;
+                window.location.href = 'crud.php?eliminar_tutor='+id;
             }
         });
     }
