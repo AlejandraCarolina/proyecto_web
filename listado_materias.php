@@ -2,8 +2,7 @@
 include 'conexion.php';
 
 // Consulta para obtener todos los registros de Materias
-$sql = "SELECT m.id, m.nombre, c.nombre AS 'nombre_carrera' FROM materias m JOIN carreras c ON m.id_carrera=c.id
-        ORDER BY m.id";
+$sql = "SELECT * FROM materias";
 $result = $conn->query($sql);
 ?>
 
@@ -16,7 +15,6 @@ $result = $conn->query($sql);
 </head>
 <body>
 <?php include "nav_bar.html"; ?>
-
 <div class="container mt-5 mb-5">
     <a href="." class="btn btn-secondary mb-2">Regresar</a>
     <h2>Listado de Materias</h2>
@@ -25,7 +23,7 @@ $result = $conn->query($sql);
         <tr>
             <th>ID</th>
             <th>Nombre</th>
-            <th>Carrera</th>
+            <th>Carrera(s)</th>
             <th>Acciones</th>
         </tr>
         </thead>
@@ -35,9 +33,25 @@ $result = $conn->query($sql);
             <tr>
                 <td><?=$row['id']?></td>
                 <td><?=$row['nombre']?></td>
-                <td><?=$row['nombre_carrera']?></td>
                 <td>
-                    <a href="editar_carrera.php?id=<?=$row['id']?>" class="btn btn-info">Editar</a>
+                    <?php
+                        $sql_carreras = "SELECT c.nombre AS 'carrera_asignada' FROM materias_carrera m_c 
+                                JOIN materias m ON m.id=m_c.id_materia JOIN carreras c ON c.id=m_c.id_carrera
+                                WHERE m.id=".$row['id'];
+                        $result_carreras = $conn->query($sql_carreras);
+
+                        // Resultados de consulta
+                        if ($result_carreras->num_rows == 0) echo '<h4>--</h4>';
+                        else {
+                            echo '<ul>';
+                            while ($row_carrera = $result_carreras->fetch_assoc())
+                                echo'<li>'.$row_carrera['carrera_asignada'].'</li>';
+                            echo '</ul>';
+                        }
+                    ?>
+                </td>
+                <td>
+                    <a href="editar_materia.php?id=<?=$row['id']?>" class="btn btn-info">Editar</a>
                     <form class="d-inline-block" onsubmit="eliminar(event, <?=$row['id']?>)" method="POST">
                         <button type="submit" class="btn btn-danger">Eliminar</button>
                     </form>
@@ -58,7 +72,7 @@ $result = $conn->query($sql);
 
         Swal.fire({
             title: "¿Estás seguro de eliminar?",
-            text: "No podrás recuperar ningún dato!",
+            text: "Ningún dato podrá ser recuperado!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD3333FF",

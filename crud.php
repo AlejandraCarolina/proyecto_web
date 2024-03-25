@@ -71,24 +71,58 @@ if(isset($_GET['eliminar_tutor'])) {
 // Alta de Materias
 if(isset($_POST['alta_materia'])) {
     $nombre = $_POST['nombre'];
-    $carrera = $_POST['carrera'];
 
-    $sql = "INSERT INTO materias (nombre, id_carrera) VALUES ('$nombre', '$carrera')";
+    $sql = "INSERT INTO materias (nombre) VALUES ('$nombre')";
     $result = $conn->query($sql);
+    $id = $conn->insert_id;
+
+    foreach ($_POST['carreras'] as $id_carrera) {
+        $sql = "INSERT INTO materias_carrera (id_materia, id_carrera) VALUES ('$id', '$id_carrera')";
+        $result = $conn->query($sql);
+    }
 
     header("Location: listado_materias.php");
 }
 
-// Cambio de Materia
+// Cambio de materias
 if(isset($_POST['cambio_materia'])) {
-    $id = $_POST['id_materia'];
+    $id_materia = $_POST['id'];
     $nombre = $_POST['nombre'];
-    $carrera = $_POST['carrera'];
 
-    $sql = "UPDATE materias SET nombre='$nombre', id_carrera='$carrera' WHERE id='$id'";
+    $sql = "UPDATE materias SET nombre='$nombre' WHERE id='$id_materia'";
     $result = $conn->query($sql);
 
-    header("Location: listado_materias.php");
+    // Consultar si dicha materia ya estaba asignada en la carrera
+    if(isset($_POST['carreras'])) {
+        $sql_carreras_deseleccionadas = "SELECT * FROM materias_carrera WHERE id_materia='$id_materia'";
+        foreach ($_POST['carreras'] as $id_carrera) {
+            $sql_carreras_deseleccionadas .= " AND id_carrera!='$id_carrera'";
+            $sql_carreras = "SELECT * FROM materias_carrera WHERE id_materia='$id_materia' AND id_carrera='$id_carrera'";
+            $result_carreras = $conn->query($sql_carreras);
+
+            // Insertar en caso de que no haya sido seleccionada antes
+            if($result_carreras->num_rows == 0) {
+                $sql = "INSERT INTO materias_carrera (id_materia, id_carrera) VALUES ('$id_materia', '$id_carrera')";
+                $result = $conn->query($sql);
+            }
+        }
+
+        // Consulta de las carreras deseleccionadas en la materia
+        $result_carreras_deseleccionadas = $conn->query($sql_carreras_deseleccionadas);
+        if($result_carreras_deseleccionadas->num_rows > 0) {
+            // Eliminar relacion de la materia con la carrera
+            while ($row = $result_carreras_deseleccionadas->fetch_assoc()) {
+                $sql = "DELETE FROM materias_carrera WHERE id=".$row['id'];
+                $result = $conn->query($sql);
+            }
+        }
+    } else {
+        // Dado que no hay selección, entonces la materia no está asignada ninguna carrera
+        $sql = "DELETE FROM materias_carrera WHERE id_materia='$id_materia'";
+        $result = $conn->query($sql);
+    }
+
+    header('Location: listado_materias.php');
 }
 
 // Eliminar Materia
