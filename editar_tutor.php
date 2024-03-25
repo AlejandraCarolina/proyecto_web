@@ -26,6 +26,7 @@ $result = $conn->query($sql);
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
+<?php include "nav_bar.html"; ?>
 <body>
 <div class="container mt-5 mb-5">
     <a href="listado_tutores.php" class="btn btn-secondary mb-2">Regresar</a>
@@ -65,8 +66,8 @@ $result = $conn->query($sql);
 </body>
 </html>
 
-<!-- Validar selección de carrera -->
 <script>
+    // Validar selección de carrera
     document.addEventListener("DOMContentLoaded", function() {
         document.querySelector('form').addEventListener('submit', function(event) {
             // Validamos que haya una carerera seleccionada
