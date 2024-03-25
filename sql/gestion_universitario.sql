@@ -72,9 +72,20 @@ CREATE TABLE IF NOT EXISTS `carreras` (
 CREATE TABLE IF NOT EXISTS `materias` (
   `id` int NOT NULL AUTO_INCREMENT,
   `nombre` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- La exportación de datos fue deseleccionada.
+
+-- Volcando estructura para tabla gestion_universitario.materias_carrera
+CREATE TABLE IF NOT EXISTS `materias_carrera` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `id_materia` int NOT NULL,
   `id_carrera` int NOT NULL,
   PRIMARY KEY (`id`),
+  KEY `fk_cat_materia` (`id_materia`),
   KEY `fk_materia_carrera` (`id_carrera`),
+  CONSTRAINT `fk_cat_materia` FOREIGN KEY (`id_materia`) REFERENCES `materias` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_materia_carrera` FOREIGN KEY (`id_carrera`) REFERENCES `carreras` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 

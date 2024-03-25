@@ -26,8 +26,8 @@ $result = $conn->query($sql);
             <!-- Mostrar registros de Carreras -->
             <label><?= $result->num_rows == 0 ? 'No se encuentra ningúna carrera a la que se le pueda asignar' : 'Carrera:' ?></label>
             <?php while ($row = $result->fetch_assoc()): ?>
-                <div class="custom-control custom-radio">
-                    <input type="radio" class="custom-control-input" name="carrera" id="<?=$row['id']?>" value="<?=$row['id']?>">
+                <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" name="carreras[]" id="<?=$row['id']?>" value="<?=$row['id']?>">
                     <label class="custom-control-label" for="<?=$row['id']?>"><?=$row['nombre']?></label>
                 </div>
             <?php endwhile; ?>
@@ -37,22 +37,3 @@ $result = $conn->query($sql);
 </div>
 </body>
 </html>
-
-<script>
-    // Validar selección de carrera
-    document.addEventListener("DOMContentLoaded", function() {
-        document.querySelector('form').addEventListener('submit', function(event) {
-            // Validamos que haya una carerera seleccionada
-            const carrerasSeleccionadas = document.querySelectorAll('input[name="carrera"]:checked');
-            if (carrerasSeleccionadas.length === 0 || carrerasSeleccionadas.length > 1) {
-                event.preventDefault();
-                Swal.fire({
-                    title:  "¡Advertencia!",
-                    text:   "Debes de seleccionar una carrera",
-                    icon:   "warning"
-                });
-            }
-        });
-    });
-</script>
-
