@@ -5,6 +5,7 @@
 
     </head>
     <body>
+    <?php include "nav_bar.html"; ?>
         <div class="container mt-5">
             <h2>Alta de Carreras</h2>
             <form action="crud.php" method="POST">

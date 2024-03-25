@@ -4,6 +4,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
     </head>
     <body>
+    <?php include "nav_bar.html"; ?>
         <div class="container mt-5">
             <h2>Alta de Alumno</h2>
             <form action="crud.php" method="POST">

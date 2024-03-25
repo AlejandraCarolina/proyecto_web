@@ -15,6 +15,7 @@ $result = $conn->query($sql);
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
 <body>
+<?php include "nav_bar.html"; ?>
 <div class="container mt-5 mb-5">
     <a href="." class="btn btn-secondary mb-2">Regresar</a>
     <h2>Listado de Tutores</h2>

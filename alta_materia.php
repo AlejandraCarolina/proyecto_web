@@ -14,6 +14,7 @@ $result = $conn->query($sql);
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
 <body>
+<?php include "nav_bar.html"; ?>
 <div class="container mt-5 mb-5">
     <a href="listado_materias.php" class="btn btn-info mb-3">Regresar</a>
     <h2>Alta de Materia</h2>
