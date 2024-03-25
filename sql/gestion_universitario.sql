@@ -104,13 +104,13 @@ CREATE TABLE IF NOT EXISTS `tutorias` (
   `fecha_tutoria` date NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_tutoria_carrera` (`id_carrera`),
-  KEY `fk_tutoria_materia` (`id_materia`),
   KEY `fk_tutoria_alumno` (`id_alumno`),
   KEY `fk_tutoria_tutor` (`id_tutor`),
+  KEY `fk_tutorias_materias` (`id_materia`),
   CONSTRAINT `fk_tutoria_alumno` FOREIGN KEY (`id_alumno`) REFERENCES `alumnos` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_tutoria_carrera` FOREIGN KEY (`id_carrera`) REFERENCES `carreras` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_tutoria_materia` FOREIGN KEY (`id_materia`) REFERENCES `carreras` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_tutoria_tutor` FOREIGN KEY (`id_tutor`) REFERENCES `tutores` (`id`) ON DELETE CASCADE
+  CONSTRAINT `fk_tutoria_tutor` FOREIGN KEY (`id_tutor`) REFERENCES `tutores` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_tutorias_materias` FOREIGN KEY (`id_materia`) REFERENCES `materias` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- La exportación de datos fue deseleccionada.
