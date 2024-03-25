@@ -59,7 +59,7 @@ $result = $conn->query($sql);
                 </div>
             <?php endwhile; ?>
         </div>
-        <button type="submit" class="btn btn-primary mb-3" name="cambio_tutor" <?=$result->num_rows == 0 ? 'disabled' : '' ?>>Guardar Cambios</button>
+        <button type="submit" class="btn btn-primary mb-5" name="cambio_tutor" <?=$result->num_rows == 0 ? 'disabled' : '' ?>>Guardar Cambios</button>
     </form>
 </div>
 </body>

@@ -3,7 +3,7 @@ include 'conexion.php';
 
 // Consulta para obtener todos los registros de Tutores
 $sql = "SELECT t.id, t.nombre, t.correo, c.nombre AS 'nombre_carrera' FROM tutores t
-            JOIN carreras c ON t.id_carrera = c.id";
+            JOIN carreras c ON t.id_carrera = c.id ORDER BY t.id";
 $result = $conn->query($sql);
 ?>
 
@@ -46,13 +46,13 @@ $result = $conn->query($sql);
         <?php endwhile; ?>
         </tbody>
     </table>
-    <a href="alta_tutor.php" class="btn btn-primary">Agregar Tutor</a>
+    <a href="alta_tutor.php" class="btn btn-primary mb-5">Agregar Tutor</a>
 </div>
 </body>
 </html>
 
-<!-- Confirmación de eliminación -->
 <script>
+    // Confirmación de eliminación
     function eliminar(event, id) {
         event.preventDefault();
 

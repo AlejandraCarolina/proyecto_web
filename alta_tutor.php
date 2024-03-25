@@ -39,7 +39,7 @@ $result = $conn->query($sql);
                 </div>
             <?php endwhile; ?>
         </div>
-        <button type="submit" class="btn btn-primary mb-3" name="alta_tutor" <?=$result->num_rows == 0 ? 'disabled' : '' ?>>Agregar Tutor</button>
+        <button type="submit" class="btn btn-primary mb-5" name="alta_tutor" <?=$result->num_rows == 0 ? 'disabled' : '' ?>>Agregar Tutor</button>
     </form>
 </div>
 </body>
