@@ -38,7 +38,7 @@ $result = $conn->query($sql);
                 <td><?=$row['nombre_carrera']?></td>
                 <td>
                     <a href="editar_tutor.php?id=<?=$row['id']?>" class="btn btn-info">Editar</a>
-                    <form class="d-inline-block" onsubmit="eliminar(event, <?=$row['id_vehiculo']?>)" action="crud.php?eliminar_tutor=<?=$row['id']?>" method="POST">
+                    <form class="d-inline-block" onsubmit="eliminar(event, <?=$row['id']?>)" method="POST">
                         <button type="submit" class="btn btn-danger">Eliminar</button>
                     </form>
                 </td>
@@ -61,13 +61,12 @@ $result = $conn->query($sql);
             text: "No podrás recuperar ningún dato!",
             icon: "warning",
             showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
+            confirmButtonColor: "#DD3333FF",
             confirmButtonText: "Confirmar",
             cancelButtonText: "Cancelar"
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = 'crud.php?eliminar_vehiculo='+id;
+                window.location.href = 'crud.php?eliminar_tutor='+id;
             }
         });
     }

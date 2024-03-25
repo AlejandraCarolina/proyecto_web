@@ -1,7 +1,7 @@
 <?php
 include 'conexion.php';
 
-// Consulta de Materias
+// Consulta de Carreras
 $sql = "SELECT * FROM carreras";
 $result = $conn->query($sql);
 ?>
@@ -34,7 +34,7 @@ $result = $conn->query($sql);
             <label><?= $result->num_rows == 0 ? 'No se encuentra ningúna carrera a la que se le pueda asignar' : 'Carrera:' ?></label>
             <?php while ($row = $result->fetch_assoc()): ?>
                 <div class="custom-control custom-radio">
-                    <input type="radio" class="custom-control-input" name="carreras[]" id="<?=$row['id']?>" value="<?=$row['id']?>">
+                    <input type="radio" class="custom-control-input" name="carrera" id="<?=$row['id']?>" value="<?=$row['id']?>">
                     <label class="custom-control-label" for="<?=$row['id']?>"><?=$row['nombre']?></label>
                 </div>
             <?php endwhile; ?>
@@ -48,14 +48,13 @@ $result = $conn->query($sql);
 <!-- Validar selección de carrera -->
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        const form = document.querySelector('form');
-
-        form.addEventListener('submit', function(event) {
-            const carrerasSeleccionadas = document.querySelectorAll('input[name="carreras[]"]:checked'); // selecciona todas las carreras seleccionadas
-            if (carrerasSeleccionadas.length === 0) { // si no hay carreras seleccionadas
+        document.querySelector('form').addEventListener('submit', function(event) {
+            // Validamos que haya una carerera seleccionada
+            const carrerasSeleccionadas = document.querySelectorAll('input[name="carrera"]:checked');
+            if (carrerasSeleccionadas.length === 0 || carrerasSeleccionadas.length > 1) {
                 event.preventDefault();
                 Swal.fire({
-                    title:  "Advertencia",
+                    title:  "¡Advertencia!",
                     text:   "Debes de seleccionar una carrera",
                     icon:   "warning"
                 });
