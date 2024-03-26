@@ -4,6 +4,31 @@ include 'conexion.php';
 // Consulta para obtener todos los registros de Materias
 $sql = "SELECT * FROM materias";
 $result = $conn->query($sql);
+
+function exportToXLS($filename, $data) {
+    header('Content-Type: application/vnd.ms-excel');
+    header('Content-Disposition: attachment; filename="' . $filename . '.xls"');
+
+    echo '<table border="1">';
+    foreach ($data as $row) {
+        echo '<tr>';
+        foreach ($row as $column) {
+            echo '<td>' . $column . '</td>';
+        }
+        echo '</tr>';
+    }
+    echo '</table>';
+}
+
+$materias_data = [];
+if($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $materias_data = $row;
+    }
+    $result = $conn->query($sql);
+}
+
+if(isset($_POST['export_materias'])) exportToXLS('materias', $materias_data);
 ?>
 
 <html lang="es">
@@ -60,7 +85,10 @@ $result = $conn->query($sql);
         <?php endwhile; ?>
         </tbody>
     </table>
-    <a href="alta_materia.php" class="btn btn-primary">Agregar Materia</a>
+    <form action="" method="POST">
+        <a href="alta_materia.php" class="btn btn-primary">Agregar Materia</a>
+        <input type="submit" name="export_materias" value="Exportar a XLS" class="btn btn-success">
+    </form>
 </div>
 </body>
 </html>

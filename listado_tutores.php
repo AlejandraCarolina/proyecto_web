@@ -29,7 +29,6 @@ if($result->num_rows > 0) {
     $result = $conn->query($sql);
 }
 
-
 if(isset($_POST['export_tutores'])) exportToXLS('tutores', $tutores_data);
 ?>
 
