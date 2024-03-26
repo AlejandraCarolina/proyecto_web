@@ -134,3 +134,44 @@ if(isset($_GET['eliminar_materia'])) {
 
     header("Location: listado_materias.php");
 }
+
+// Consulta para la previa alta de asesorias - Carrera
+if(isset($_POST['previa_asesoria_carrera'])) {
+    $id_carrera = $_POST['previa_asesoria_carrera'];
+
+    // Consulta de Materias asignadas a la Carrera seleccionada (materias_carrera)
+    $sql_m_c = "SELECT m_c.id AS 'id_m_c', m.id AS 'id', m.nombre AS 'nombre' FROM materias_carrera m_c 
+            JOIN materias m ON m_c.id_materia=m.id WHERE m_c.id_carrera = '$id_carrera' ORDER BY 'id_m_c'";
+    $result_m_c = $conn->query($sql_m_c);
+
+    $materias_carrera = [];
+    if($result_m_c->num_rows > 0) while ($materia = $result_m_c->fetch_assoc()) $materias_carrera[] = $materia;
+
+    // Consulta de Tutores asignados a la Carrrera seleccionada
+    $sql_a = "SELECT t.id, t.nombre FROM tutores t WHERE id_carrera = '$id_carrera'";
+    $result_a = $conn->query($sql_a);
+    $asesores = [];
+    if($result_a->num_rows > 0) while ($asesor = $result_a->fetch_assoc()) $asesores[] = $asesor;
+
+    // Variable para guardar las consultas en json
+    $datas = array(
+        'materias' => $materias_carrera,
+        'asesores' => $asesores,
+    );
+
+    echo json_encode($datas);
+}
+
+// Consulta para la previa alta de asesorias - Alumnos
+if(isset($_POST['previa_asesoria_alumno'])) {
+    $id_tutor = $_POST['previa_asesoria_alumno'];
+
+    // Consulta de Alumnos asignados al Tutor seleccionado
+    $sql_al = "SELECT al.id, al.nombre FROM alumnos al WHERE id_tutor = '$id_tutor'";
+    $result_al = $conn->query($sql_al);
+
+    $data = [];
+    if($result_al->num_rows > 0) while ($alumno = $result_al->fetch_assoc()) $data[] = $alumno;
+
+    echo json_encode($data);
+}
