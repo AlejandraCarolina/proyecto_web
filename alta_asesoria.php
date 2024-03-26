@@ -20,7 +20,7 @@ $result = $conn->query($sql);
     <a href="listado_materias.php" class="btn btn-info mb-3">Regresar</a>
     <h2>Alta de Asesoría</h2>
     <form action="crud.php" method="POST">
-        <div class="row row-cols-2">
+        <div class="row row-cols-3">
             <div class="form-group col">
                 <!-- Mostrar registros de Carreras -->
                 <label for="carrera"><?= $result->num_rows == 0 ? 'No se encuentra ningúna carrera a la que se le pueda asignar' : 'Carrera:' ?></label>
@@ -38,6 +38,10 @@ $result = $conn->query($sql);
                     <option value="0" selected disabled><?= $result->num_rows == 0 ? 'Sin carreras asignadas' : 'Eliga una materia' ?></option>
                     <!-- Más opciones através de JS -->
                 </select>
+            </div>
+            <div class="form-group col">
+                <label for="fecha_asesoria">Fecha:</label>
+                <input type="date" class="form-control" id="fecha_asesoria" required>
             </div>
         </div>
         <div class="row row-cols-2">
@@ -58,7 +62,11 @@ $result = $conn->query($sql);
                 </select>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary" name="alta_materia" <?=$result->num_rows == 0 ? 'disabled' : '' ?>>Agregar Materia</button>
+        <div class="form-group">
+            <label for="observaciones">Observaciones</label>
+            <textarea rows="2" id="observaciones" class="form-control" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" name="alta_asesoria" <?=$result->num_rows == 0 ? 'disabled' : '' ?>>Agregar Asesoria</button>
     </form>
 </div>
 </body>
