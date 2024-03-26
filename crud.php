@@ -175,3 +175,19 @@ if(isset($_POST['previa_asesoria_alumno'])) {
 
     echo json_encode($data);
 }
+
+// Alta de asesorias
+if(isset($_POST['alta_asesoria'])) {
+    $id_carrera = $_POST['carrera'];
+    $id_materia = $_POST['materia'];
+    $id_alumno = $_POST['alumno'];
+    $id_asesor = $_POST['asesor'];
+    $observaciones = $_POST['observaciones'];
+    $fecha_asesoria = $_POST['fecha'];
+
+    $sql = "INSERT INTO asesorias (id_carrera, id_materia, id_alumno, id_asesor, observaciones, fecha_asesoria) 
+            VALUES ('$id_carrera', '$id_materia', '$id_alumno', '$id_asesor', '$observaciones', '$fecha_asesoria')";
+    $result = $conn->query($sql);
+
+    header("Location: listado_asesorias.php");
+}

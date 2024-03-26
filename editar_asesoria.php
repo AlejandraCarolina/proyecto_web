@@ -1,6 +1,19 @@
 <?php
 include 'conexion.php';
 
+if(!isset($_GET['id'])) {
+    header('Location: listado_tutores.php');
+    return;
+}
+
+// Validación de que exista la asesoria
+$id = $_GET['id'];
+$sql = "SELECT * FROM asesorias WHERE id='$id'";
+$result = $conn->query($sql);
+// Enviar alerta
+if($result->num_rows == 0 || $result->num_rows > 1) return;
+$q_asesoria = $result->fetch_assoc();
+
 // Consulta de Carreras
 $sql = "SELECT * FROM carreras";
 $result = $conn->query($sql);
@@ -20,6 +33,7 @@ $result = $conn->query($sql);
     <a href="listado_materias.php" class="btn btn-info mb-3">Regresar</a>
     <h2>Alta de Asesoría</h2>
     <form action="crud.php" method="POST">
+        <input type="hidden" name="id" value="<?=$q_asesoria['id']?>">
         <div class="row row-cols-3">
             <div class="form-group col">
                 <!-- Mostrar registros de Carreras -->
@@ -41,7 +55,7 @@ $result = $conn->query($sql);
             </div>
             <div class="form-group col">
                 <label for="fecha_asesoria">Fecha:</label>
-                <input type="date" class="form-control" name="fecha" id="fecha_asesoria" required>
+                <input type="date" class="form-control" name="fecha" id="fecha_asesoria" value="<?=$q_asesoria['fecha_asesoria']?>" required>
             </div>
         </div>
         <div class="row row-cols-2">
@@ -64,7 +78,7 @@ $result = $conn->query($sql);
         </div>
         <div class="form-group">
             <label for="observaciones">Observaciones</label>
-            <textarea rows="2" name="observaciones" id="observaciones" class="form-control" required></textarea>
+            <textarea rows="2" name="observaciones" id="observaciones" class="form-control" required><?=$q_asesoria['observaciones']?></textarea>
         </div>
         <button type="submit" class="btn btn-primary" id="envio" name="alta_asesoria" <?=$result->num_rows == 0 ? 'disabled' : '' ?>>Agregar Asesoria</button>
     </form>
@@ -76,6 +90,10 @@ $result = $conn->query($sql);
     // Consulta dinámica de datos dependiendo de su selección de Carrera
     // Uso de JQuery, AJAX y SweetAlert
     $(document).ready(function() {
+        $.ajax({
+            url: "listado_asesorias.php";
+        });
+
         // Para select 'carrera'
         $('#carrera').change(function() {
             const id_carrera = $(this).val();
