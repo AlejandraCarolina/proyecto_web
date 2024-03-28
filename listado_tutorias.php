@@ -67,7 +67,7 @@ $result = $conn->query($sql);
 
         Swal.fire({
             title: "¿Estás seguro de eliminar?",
-            text: "No podrás recuperar ningún dato!",
+            text: "¡No podrás recuperar ningún dato de esta tutoría!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD3333FF",

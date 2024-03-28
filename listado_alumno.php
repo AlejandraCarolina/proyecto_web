@@ -5,8 +5,9 @@ include 'conexion.php';
 
 // Consulta SQL para obtener todos los registros de la tabla alumnos
 $sql = 'SELECT alumnos.id, alumnos.matricula, alumnos.nombre, alumnos.correo, 
-carreras.nombre as carrera_nombre, tutores.nombre as tutor_nombre FROM alumnos INNER JOIN carreras ON alumnos.id_carrera = carreras.id 
-JOIN tutores ON alumnos.id_tutor = tutores.id';
+        carreras.nombre as carrera_nombre, tutores.nombre as tutor_nombre FROM alumnos 
+            LEFT JOIN carreras ON alumnos.id_carrera = carreras.id 
+            LEFT JOIN tutores ON alumnos.id_tutor = tutores.id';
 $result = $conn->query($sql);
 
 ?>
@@ -46,8 +47,8 @@ $result = $conn->query($sql);
                         <td><?php echo $row['matricula'];?></td>
                         <td><?php echo $row['nombre'];?></td>
                         <td><?php echo $row['correo'];?></td>
-                        <td><?php echo $row['carrera_nombre'];?></td>
-                        <td><?php echo $row['tutor_nombre'];?></td>
+                        <td><?= $row['carrera_nombre'] == null ? '<em>Sin asignar</em>' : $row['carrera_nombre'] ?></td>
+                        <td><?= $row['tutor_nombre'] == null ? '<em>Sin asignar</em>' : $row['tutor_nombre'] ?></td>
                         <td>
                                 <a href="editar_alumno.php?id=<?= $row['id']?>" class="btn btn-primary">Editar</a>
                                 <a href="crud.php?eliminar_alumno=<?= $row['id']?>" class="btn btn-danger">Eliminar</a>

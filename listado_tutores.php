@@ -3,7 +3,7 @@ include 'conexion.php';
 
 // Consulta para obtener todos los registros de Tutores
 $sql = "SELECT t.id, t.nombre, t.correo, c.nombre AS 'nombre_carrera' FROM tutores t
-            JOIN carreras c ON t.id_carrera = c.id ORDER BY t.id";
+            LEFT JOIN carreras c ON t.id_carrera = c.id ORDER BY t.id";
 $result = $conn->query($sql);
 
 function exportToXLS($filename, $data) {
@@ -61,7 +61,7 @@ if(isset($_POST['export_tutores'])) exportToXLS('tutores', $tutores_data);
                 <td><?=$row['id']?></td>
                 <td><?=$row['nombre']?></td>
                 <td><?=$row['correo']?></td>
-                <td><?=$row['nombre_carrera']?></td>
+                <td><?=$row['nombre_carrera'] == null ? '<em>Sin asignar</em>' : $row['nombre_carrera']?></td>
                 <td>
                     <a href="editar_tutor.php?id=<?=$row['id']?>" class="btn btn-info">Editar</a>
                     <form class="d-inline-block" onsubmit="eliminar(event, <?=$row['id']?>)" method="POST">
@@ -87,7 +87,7 @@ if(isset($_POST['export_tutores'])) exportToXLS('tutores', $tutores_data);
 
         Swal.fire({
             title: "¿Estás seguro de eliminar?",
-            text: "No podrás recuperar ningún dato!",
+            text: "¡Se eliminará su asignacion como tutor en los alumnos y los registros que se tengan en las asesorías y tutorías!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD3333FF",

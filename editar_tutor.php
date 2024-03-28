@@ -43,7 +43,11 @@ $result = $conn->query($sql);
 
         <div class="form-group">
             <!-- Mostrar registros de Carreras -->
-            <label><?= $result->num_rows == 0 ? 'No se encuentra ningúna carrera a la que se le pueda asignar' : 'Carrera:' ?></label>
+            <label>Carrera:</label>
+            <div class="custom-control custom-radio">
+                <input type="radio" class="custom-control-input" name="carrera" id="0" value="0" <?= $tutor['id_carrera'] == null ? 'checked' : '' ?>>
+                <label class="custom-control-label" for="0">Sin asignar</label>
+            </div>
             <?php while ($row = $result->fetch_assoc()):
                 // Buscamos la carrera seleccionada
                 $sql_t_m = "SELECT * FROM tutores t JOIN carreras c ON t.id_carrera=c.id WHERE t.id = ".$tutor['id']." AND c.id = ".$row['id'];
@@ -62,22 +66,3 @@ $result = $conn->query($sql);
 </div>
 </body>
 </html>
-
-<script>
-    // Validar selección de carrera
-    document.addEventListener("DOMContentLoaded", function() {
-        document.querySelector('form').addEventListener('submit', function(event) {
-            // Validamos que haya una carerera seleccionada
-            const carrerasSeleccionadas = document.querySelectorAll('input[name="carrera"]:checked');
-            if (carrerasSeleccionadas.length === 0 || carrerasSeleccionadas.length > 1) {
-                event.preventDefault();
-                Swal.fire({
-                    title:  "¡Advertencia!",
-                    text:   "Debes de seleccionar una carrera",
-                    icon:   "warning"
-                });
-            }
-        });
-    });
-</script>
-
