@@ -1,17 +1,14 @@
 <?php
 include 'conexion.php';
 
-if(!isset($_GET['id'])) {
-    header('Location: listado_materias.php');
-    return;
-}
+if(!isset($_GET['id'])) header('Location: listado_materias.php');
 
 // Validación de que exista la materia
 $id = $_GET['id'];
 $sql = "SELECT * FROM materias WHERE id='$id'";
 $result = $conn->query($sql);
 // Enviar alerta
-if($result->num_rows == 0 || $result->num_rows > 1) return;
+if($result->num_rows == 0 || $result->num_rows > 1) header('Location: listado_materias.php');
 $materia = $result->fetch_assoc();
 
 // Consulta de Carreras

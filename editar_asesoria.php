@@ -1,17 +1,14 @@
 <?php
 include 'conexion.php';
 
-if(!isset($_GET['id'])) {
-    header('Location: listado_tutores.php');
-    return;
-}
+if(!isset($_GET['id'])) header('Location: listado_asesorias.php');
 
 // Validación de que exista la asesoria
 $id = $_GET['id'];
 $sql = "SELECT * FROM asesorias WHERE id='$id'";
 $result = $conn->query($sql);
 // Enviar alerta
-if($result->num_rows == 0 || $result->num_rows > 1) return;
+if($result->num_rows == 0 || $result->num_rows > 1) header('Location: listado_asesorias.php');
 $q_asesoria = $result->fetch_assoc();
 
 // Consulta de Carreras
@@ -21,7 +18,7 @@ $result = $conn->query($sql);
 
 <html lang="es">
 <head>
-    <title>Alta de Asesorías</title>
+    <title>Editar Asesorías</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
@@ -30,10 +27,10 @@ $result = $conn->query($sql);
 <body>
 <?php include "nav_bar.html"; ?>
 <div class="container mt-5 mb-5">
-    <a href="listado_materias.php" class="btn btn-info mb-3">Regresar</a>
-    <h2>Alta de Asesoría</h2>
+    <a href="listado_asesorias.php" class="btn btn-info mb-3">Regresar</a>
+    <h2>Editar Asesoría</h2>
     <form action="crud.php" method="POST">
-        <input type="hidden" name="id" value="<?=$q_asesoria['id']?>">
+        <input type="hidden" name="id" id="id" value="<?=$q_asesoria['id']?>">
         <div class="row row-cols-3">
             <div class="form-group col">
                 <!-- Mostrar registros de Carreras -->
@@ -80,7 +77,7 @@ $result = $conn->query($sql);
             <label for="observaciones">Observaciones</label>
             <textarea rows="2" name="observaciones" id="observaciones" class="form-control" required><?=$q_asesoria['observaciones']?></textarea>
         </div>
-        <button type="submit" class="btn btn-primary" id="envio" name="alta_asesoria" <?=$result->num_rows == 0 ? 'disabled' : '' ?>>Agregar Asesoria</button>
+        <button type="submit" class="btn btn-primary" id="envio" name="cambio_asesoria" <?=$result->num_rows == 0 ? 'disabled' : '' ?>>Guardar Cambios</button>
     </form>
 </div>
 </body>
@@ -90,101 +87,117 @@ $result = $conn->query($sql);
     // Consulta dinámica de datos dependiendo de su selección de Carrera
     // Uso de JQuery, AJAX y SweetAlert
     $(document).ready(function() {
+        // Instanciar selects
+        const carreraSelect = $('#carrera');
+        const materiaSelect = $('#materia_carrera');
+        const asesorSelect = $('#asesor');
+        const alumnoSelect = $('#alumno');
+
+        // Realizar consulta y para despues identificar y seleccionarlas en el formulario
+        let data_a_t;
         $.ajax({
-            url: "listado_asesorias.php";
+            type: 'POST',
+            url: 'crud.php',
+            data: {q_asesoria: $('#id').val()},
+            dataType: 'json',
+            success: function (data) {
+                data_a_t = data;
+                carreraSelect.val(data.id_carrera).trigger('change');
+            }
         });
 
         // Para select 'carrera'
-        $('#carrera').change(function() {
+        carreraSelect.change(function() {
             const id_carrera = $(this).val();
-            if (id_carrera !== '0') {
-                $.ajax({
-                    type: 'POST',
-                    url: 'crud.php',
-                    data: {previa_asesoria_carrera: id_carrera},
-                    dataType: 'json',
-                    success: function(data) {
-                        const materias = data.materias;
-                        const materiasSelect = $('#materia_carrera');
-                        materiasSelect.empty();
-                        if (materias.length > 0) {
-                            materiasSelect.append('<option value="0" selected disabled>Selecccione una materia</option>');
-                            $.each(materias, function(key, materia_carrera) {
-                                materiasSelect.append('<option value="' + materia_carrera.id + '">' + materia_carrera.nombre + '</option>');
-                            });
-                        } else {
-                            materiasSelect.append('<option value="0" selected disabled>Sin materias asignadas</option>');
-                        }
-                        materiasSelect.prop('disabled', false);
+            $.ajax({
+                type: 'POST',
+                url: 'crud.php',
+                data: {q_materia_carrera: id_carrera},
+                dataType: 'json',
+                success: function(data) {
+                    const materias = data.materias;
+                    materiaSelect.empty();
+                    if (materias.length > 0) {
+                        materiaSelect.prop('disabled', false);
+                        materiaSelect.append('<option value="0" selected disabled>Selecccione una materia</option>');
+                        $.each(materias, function(key, materia_carrera) {
+                            materiaSelect.append('<option value="' + materia_carrera.id + '" >' + materia_carrera.nombre + '</option>');
 
-                        const asesores = data.asesores;
-                        const asesoresSelect = $('#asesor');
-                        asesoresSelect.empty();
-                        if (asesores.length > 0) {
-                            asesoresSelect.append('<option value="0" selected disabled>Seleccione un asesor</option>');
-                            $.each(asesores, function(key, asesor) {
-                                asesoresSelect.append('<option value="' + asesor.id + '">' + asesor.nombre + '</option>');
-                            });
-                        } else {
-                            asesoresSelect.append('<option value="0" selected disabled>Sin asesores asignados</option>');
-                        }
-                        asesoresSelect.prop('disabled', false);
-                    },
-                    error: function(xhr, status, error) {
-                        Swal.fire({
-                            title:  "¡Error!",
-                            text:   "Error al obtener las materias: " + error,
-                            icon:   "error"
+                            // selección
+                            if(data_a_t.id_materia === materia_carrera.id) materiaSelect.val(materia_carrera.id).trigger('change');
                         });
+                    } else {
+                        materiaSelect.append('<option value="0" selected disabled>Sin materias asignadas</option>');
+                        materiaSelect.prop('disabled', true);
                     }
-                });
-            } else {
-                $('#materia_carrera').empty().prop('disabled', true).append('<option value="0" selected disabled>Seleccione una carrera primero</option>');
-            }
+
+                    const asesores = data.a_t;
+                    asesorSelect.empty();
+                    if (asesores.length > 0) {
+                        asesorSelect.prop('disabled', false);
+                        asesorSelect.append('<option value="0" selected disabled>Seleccione un asesor</option>');
+                        $.each(asesores, function(key, asesor) {
+                            asesorSelect.append('<option value="' + asesor.id + '" ' + (data_a_t.id_asesor === asesor.id ? 'selected' : '') + '>' + asesor.nombre + '</option>');
+
+                            // selección
+                            if(data_a_t.id_asesor === asesor.id) asesorSelect.val(asesor.id).trigger('change');
+                        });
+                    } else {
+                        asesorSelect.append('<option value="0" selected disabled>Sin asesores asignados</option>');
+                        asesorSelect.prop('disabled', true);
+                    }
+
+                    alumnoSelect.empty();
+                    alumnoSelect.append('<option value="0" selected disabled>Seleccione una asesor primero</option>');
+                    alumnoSelect.prop('disabled', true);
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire({
+                        title:  "¡Error!",
+                        text:   "Error al obtener las materias: " + error,
+                        icon:   "error"
+                    });
+                }
+            });
         });
 
         // Para select 'asesor'
-        $('#asesor').change(function () {
+        asesorSelect.change(function () {
             const id_asesor = $(this).val();
-            if(id_asesor !== '0') {
-                $.ajax({
-                    type: 'POST',
-                    url: 'crud.php',
-                    data: {previa_asesoria_alumno: id_asesor},
-                    dataType: 'json',
-                    success: function (data) {
-                        const alumnoSelect = $('#alumno')
-                        alumnoSelect.empty();
-                        if (data.length > 0) {
-                            alumnoSelect.append('<option value="0" selected disabled>Seleccione un alumno</option>');
-                            $.each(data, function (key, alumno) {
-                                alumnoSelect.append('<option value="' + alumno.id + '">' + alumno.nombre + '</option>');
-                            });
-                        } else {
-                            alumnoSelect.append('<option value="0" selected disabled>Sin alumnos asignados</option>');
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        Swal.fire({
-                            title:  "¡Error!",
-                            text:   "Error al obtener los alumnos: " + error,
-                            icon:   "error"
+            $.ajax({
+                type: 'POST',
+                url: 'crud.php',
+                data: {q_alumno_tutor: id_asesor},
+                dataType: 'json',
+                success: function (data) {
+                    alumnoSelect.empty();
+                    if (data.length > 0) {
+                        alumnoSelect.prop('disabled', false);
+                        alumnoSelect.append('<option value="0" selected disabled>Seleccione un alumno</option>');
+                        $.each(data, function (key, alumno) {
+                            alumnoSelect.append('<option value="' + alumno.id + '">' + alumno.nombre + '</option>');
+
+                            // selección
+                            if(data_a_t.id_alumno === alumno.id) alumnoSelect.val(alumno.id).trigger('change');
                         });
+                    } else {
+                        alumnoSelect.append('<option value="0" selected disabled>Sin alumnos asignados</option>');
+                        alumnoSelect.prop('disabled', true);
                     }
-                });
-            } else {
-                $('#alumno').empty().prop('disabled', true).append('<option value="0" selected disabled>Seleccione una carrera primero</option>');
-            }
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire({
+                        title:  "¡Error!",
+                        text:   "Error al obtener los alumnos: " + error,
+                        icon:   "error"
+                    });
+                }
+            });
         });
 
         // Validación de selects
         $('#envio').on("click", function (event) {
-            const carrera = $('#carrera').val();
-            const materia = $('#materia_carrera').val();
-            const asesor = $('#asesor').val();
-            const alumno = $('#alumno').val();
-
-            if(carrera == null || materia == null || asesor == null || alumno == null) {
+            if(carreraSelect.val() == null || materiaSelect.val() == null || asesorSelect.val() == null || alumnoSelect.val() == null) {
                 event.preventDefault();
 
                 Swal.fire({

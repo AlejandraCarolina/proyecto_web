@@ -7,19 +7,6 @@ $sql = "SELECT a.id, c.nombre AS 'carrera', m.nombre AS 'materia', al.nombre AS 
         JOIN materias m ON a.id_materia=m.id JOIN alumnos al ON a.id_alumno=al.id JOIN tutores t ON a.id_asesor=t.id
     ORDER BY a.id";
 $result = $conn->query($sql);
-
-if(isset($_POST['editar'])) {
-    // Validación de que exista la asesoria
-    $id = $_POST['id_asesoria'];
-    $sql = "SELECT * FROM asesorias WHERE id='$id'";
-    $result = $conn->query($sql);
-    // Enviar alerta
-    if($result->num_rows == 0 || $result->num_rows > 1) return;
-    $asesoria = $result->fetch_assoc();
-
-    echo json_encode($asesoria);
-    header("Location: editar_asesoria.php?id=".$asesoria['id']);
-}
 ?>
 
 <html lang="es">
@@ -59,11 +46,7 @@ if(isset($_POST['editar'])) {
                 <td><?=$row['observaciones']?></td>
                 <td><?=$row['fecha_asesoria']?></td>
                 <td>
-                    <form class="d-inline-block" action="" method="POST">
-                        <input type="hidden" name="id_asesoria" value="<?=$row['id']?>">
-                        <button type="submit" class="btn btn-info" name="editar">Editar</button>
-                    </form>
-<!--                    <a href="editar_asesoria.php?id=--><?php //=$row['id']?><!--" class="btn btn-info">Editar</a>-->
+                    <a href="editar_asesoria.php?id=<?=$row['id']?>" class="btn btn-info">Editar</a>
                     <form class="d-inline-block" onsubmit="eliminar(event, <?=$row['id']?>)" method="POST">
                         <button type="submit" class="btn btn-danger">Eliminar</button>
                     </form>

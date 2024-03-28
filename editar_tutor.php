@@ -1,17 +1,14 @@
 <?php
 include 'conexion.php';
 
-if(!isset($_GET['id'])) {
-    header('Location: listado_tutores.php');
-    return;
-}
+if(!isset($_GET['id'])) header('Location: listado_tutores.php');
 
 // Validación de que exista el tutor
 $id = $_GET['id'];
 $sql = "SELECT * FROM tutores WHERE id='$id'";
 $result = $conn->query($sql);
 // Enviar alerta
-if($result->num_rows == 0 || $result->num_rows > 1) return;
+if($result->num_rows == 0 || $result->num_rows > 1) header('Location: listado_tutores.php');
 $tutor = $result->fetch_assoc();
 
 // Consulta de Carreras

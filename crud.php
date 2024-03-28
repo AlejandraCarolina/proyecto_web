@@ -135,9 +135,9 @@ if(isset($_GET['eliminar_materia'])) {
     header("Location: listado_materias.php");
 }
 
-// Consulta para la previa alta de asesorias - Carrera
-if(isset($_POST['previa_asesoria_carrera'])) {
-    $id_carrera = $_POST['previa_asesoria_carrera'];
+// Consulta para la previa alta de asesorias/tutorias - Materias asignadas a una Carrera
+if(isset($_POST['q_materia_carrera'])) {
+    $id_carrera = $_POST['q_materia_carrera'];
 
     // Consulta de Materias asignadas a la Carrera seleccionada (materias_carrera)
     $sql_m_c = "SELECT m_c.id AS 'id_m_c', m.id AS 'id', m.nombre AS 'nombre' FROM materias_carrera m_c 
@@ -150,21 +150,22 @@ if(isset($_POST['previa_asesoria_carrera'])) {
     // Consulta de Tutores asignados a la Carrrera seleccionada
     $sql_a = "SELECT t.id, t.nombre FROM tutores t WHERE id_carrera = '$id_carrera'";
     $result_a = $conn->query($sql_a);
-    $asesores = [];
-    if($result_a->num_rows > 0) while ($asesor = $result_a->fetch_assoc()) $asesores[] = $asesor;
+    $a_t = []; // Asesor o Tutor
+    if($result_a->num_rows > 0) while ($row = $result_a->fetch_assoc()) $a_t[] = $row;
 
-    // Variable para guardar las consultas en json
+    // Variable para guardar las consultas en JSON
     $datas = array(
         'materias' => $materias_carrera,
-        'asesores' => $asesores,
+        'a_t' => $a_t,
     );
 
+    // Impresión de datos en JSON para el script js
     echo json_encode($datas);
 }
 
-// Consulta para la previa alta de asesorias - Alumnos
-if(isset($_POST['previa_asesoria_alumno'])) {
-    $id_tutor = $_POST['previa_asesoria_alumno'];
+// Consulta para la previa alta de asesorias/tutorias - Alumno tiene Tutor / Alumno tiene Asesor
+if(isset($_POST['q_alumno_tutor'])) {
+    $id_tutor = $_POST['q_alumno_tutor'];
 
     // Consulta de Alumnos asignados al Tutor seleccionado
     $sql_al = "SELECT al.id, al.nombre FROM alumnos al WHERE id_tutor = '$id_tutor'";
@@ -173,6 +174,7 @@ if(isset($_POST['previa_asesoria_alumno'])) {
     $data = [];
     if($result_al->num_rows > 0) while ($alumno = $result_al->fetch_assoc()) $data[] = $alumno;
 
+    // Impresión de datos en JSON para el script js
     echo json_encode($data);
 }
 
@@ -190,4 +192,96 @@ if(isset($_POST['alta_asesoria'])) {
     $result = $conn->query($sql);
 
     header("Location: listado_asesorias.php");
+}
+
+// Consulta previa para el cambio de Asesoria
+if(isset($_POST['q_asesoria'])) {
+    $id = $_POST['q_asesoria'];
+
+    $sql = "SELECT * FROM asesorias WHERE id='$id'";
+    $result = $conn->query($sql);
+
+    // Impresión de datos en JSON para el script js
+    echo json_encode($result->fetch_assoc());
+}
+
+// Cambio asesoria
+if(isset($_POST['cambio_asesoria'])) {
+    $id = $_POST['id'];
+    $id_carrera = $_POST['carrera'];
+    $id_materia = $_POST['materia'];
+    $id_alumno = $_POST['alumno'];
+    $id_asesor = $_POST['asesor'];
+    $observaciones = $_POST['observaciones'];
+    $fecha_asesoria = $_POST['fecha'];
+
+    $sql = "UPDATE asesorias SET id_carrera='$id_carrera', id_materia='$id_materia', id_alumno='$id_alumno', id_asesor='$id_asesor',
+            observaciones='$observaciones', fecha_asesoria='$fecha_asesoria' WHERE id = '$id'";
+    $result = $conn->query($sql);
+
+    header("Location: listado_asesorias.php");
+}
+
+// Eliminar asesoria
+if(isset($_GET['eliminar_asesoria'])) {
+    $id = $_GET['eliminar_asesoria'];
+
+    $sql = "DELETE FROM asesorias WHERE id = '$id'";
+    $result = $conn->query($sql);
+
+    header("Location: listado_asesorias.php");
+}
+
+// Alta de tutoria
+if(isset($_POST['alta_tutoria'])) {
+    $id_carrera = $_POST['carrera'];
+    $id_materia = $_POST['materia'];
+    $id_alumno = $_POST['alumno'];
+    $id_tutor = $_POST['tutor'];
+    $observaciones = $_POST['observaciones'];
+    $fecha_tutoria = $_POST['fecha'];
+
+    $sql = "INSERT INTO tutorias (id_carrera, id_materia, id_alumno, id_tutor, observaciones, fecha_tutoria) 
+            VALUES ('$id_carrera', '$id_materia', '$id_alumno', '$id_tutor', '$observaciones', '$fecha_tutoria')";
+    $result = $conn->query($sql);
+
+    header("Location: listado_tutorias.php");
+}
+
+// Consulta previa para el cambio de Tutoria
+if(isset($_POST['q_tutoria'])) {
+    $id = $_POST['q_tutoria'];
+
+    $sql = "SELECT * FROM tutorias WHERE id='$id'";
+    $result = $conn->query($sql);
+
+    // Impresión de datos en JSON para el script js
+    echo json_encode($result->fetch_assoc());
+}
+
+// Cambio de tutoria
+if(isset($_POST['cambio_tutoria'])) {
+    $id = $_POST['id'];
+    $id_carrera = $_POST['carrera'];
+    $id_materia = $_POST['materia'];
+    $id_alumno = $_POST['alumno'];
+    $id_tutor = $_POST['tutor'];
+    $observaciones = $_POST['observaciones'];
+    $fecha_tutoria = $_POST['fecha'];
+
+    $sql = "UPDATE tutorias SET id_carrera='$id_carrera', id_materia='$id_materia', id_alumno='$id_alumno', id_tutor='$id_tutor',
+            observaciones='$observaciones', fecha_tutoria='$fecha_tutoria' WHERE id = '$id'";
+    $result = $conn->query($sql);
+
+    header("Location: listado_tutorias.php");
+}
+
+// Eliminar tutoria
+if(isset($_GET['eliminar_tutoria'])) {
+    $id = $_GET['eliminar_tutoria'];
+
+    $sql = "DELETE FROM tutorias WHERE id = '$id'";
+    $result = $conn->query($sql);
+
+    header("Location: listado_tutorias.php");
 }
