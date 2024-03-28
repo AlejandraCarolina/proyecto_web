@@ -37,7 +37,7 @@ if(isset($_POST['cambio_alumno'])){
 if(isset($_POST['alta_tutor'])) {
     $nombre = $_POST['nombre'];
     $correo = $_POST['correo'];
-    $carrera = $_POST['carrera'] == '0' ? 'NULL' : "'".$_POST['carrera']."'";
+    $carrera = $_POST['carrera'] == '0' ? 'NULL' : "'".$_POST['carrera']."'"; // Caso de nulos
 
     $sql = "INSERT INTO tutores (nombre, correo, id_carrera) VALUES ('$nombre', '$correo', $carrera)";
     $result = $conn->query($sql);
@@ -50,7 +50,7 @@ if(isset($_POST['cambio_tutor'])) {
     $id = $_POST['id_tutor'];
     $nombre = $_POST['nombre'];
     $correo = $_POST['correo'];
-    $carrera = $_POST['carrera'] == '0' ? 'NULL' : "'".$_POST['carrera']."'";
+    $carrera = $_POST['carrera'] == '0' ? 'NULL' : "'".$_POST['carrera']."'"; // Caso de nulos
 
     $sql = "UPDATE tutores SET nombre='$nombre', correo='$correo', id_carrera=$carrera WHERE id='$id'";
     $result = $conn->query($sql);
@@ -76,6 +76,7 @@ if(isset($_POST['alta_materia'])) {
     $result = $conn->query($sql);
     $id = $conn->insert_id;
 
+    // Alta de relaciones de materia a carreras
     foreach ($_POST['carreras'] as $id_carrera) {
         $sql = "INSERT INTO materias_carrera (id_materia, id_carrera) VALUES ('$id', '$id_carrera')";
         $result = $conn->query($sql);
@@ -100,7 +101,7 @@ if(isset($_POST['cambio_materia'])) {
             $sql_carreras = "SELECT * FROM materias_carrera WHERE id_materia='$id_materia' AND id_carrera='$id_carrera'";
             $result_carreras = $conn->query($sql_carreras);
 
-            // Insertar en caso de que no haya sido seleccionada antes
+            // Insertar relaciones de materia a carreras en caso de que no haya sido seleccionada antes
             if($result_carreras->num_rows == 0) {
                 $sql = "INSERT INTO materias_carrera (id_materia, id_carrera) VALUES ('$id_materia', '$id_carrera')";
                 $result = $conn->query($sql);
