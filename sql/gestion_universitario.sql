@@ -22,9 +22,9 @@ USE `gestion_universitario`;
 -- Volcando estructura para tabla gestion_universitario.alumnos
 CREATE TABLE IF NOT EXISTS `alumnos` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `matricula` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
-  `nombre` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `correo` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `matricula` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `nombre` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `correo` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `id_carrera` int NOT NULL,
   `id_tutor` int DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `asesorias` (
   `id_alumno` int NOT NULL,
   `id_asesor` int NOT NULL,
   `observaciones` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `fecha_tutoria` date NOT NULL,
+  `fecha_asesoria` date NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_asesoria_carrera` (`id_carrera`),
   KEY `fk_asesora_materia` (`id_materia`),
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `asesorias` (
 -- Volcando estructura para tabla gestion_universitario.carreras
 CREATE TABLE IF NOT EXISTS `carreras` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `nombre` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `carreras` (
 -- Volcando estructura para tabla gestion_universitario.materias
 CREATE TABLE IF NOT EXISTS `materias` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `nombre` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -94,8 +94,8 @@ CREATE TABLE IF NOT EXISTS `materias_carrera` (
 -- Volcando estructura para tabla gestion_universitario.tutores
 CREATE TABLE IF NOT EXISTS `tutores` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `correo` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `nombre` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `correo` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `id_carrera` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_tutor_carrera` (`id_carrera`),
@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS `tutorias` (
   `id_materia` int NOT NULL,
   `id_alumno` int NOT NULL,
   `id_tutor` int NOT NULL,
-  `observaciones` text COLLATE utf8mb4_general_ci NOT NULL,
+  `observaciones` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `fecha_tutoria` date NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_tutoria_carrera` (`id_carrera`),
