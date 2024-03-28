@@ -25,14 +25,14 @@ CREATE TABLE IF NOT EXISTS `alumnos` (
   `matricula` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `nombre` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `correo` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `id_carrera` int NOT NULL,
+  `id_carrera` int DEFAULT NULL,
   `id_tutor` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `matricula` (`matricula`),
   KEY `fk_alumno_carrera` (`id_carrera`),
   KEY `fk_alumno_tutor` (`id_tutor`),
-  CONSTRAINT `fk_alumno_carrera` FOREIGN KEY (`id_carrera`) REFERENCES `carreras` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_alumno_tutor` FOREIGN KEY (`id_tutor`) REFERENCES `tutores` (`id`) ON DELETE CASCADE
+  CONSTRAINT `fk_alumno_carrera` FOREIGN KEY (`id_carrera`) REFERENCES `carreras` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `fk_alumno_tutor` FOREIGN KEY (`id_tutor`) REFERENCES `tutores` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- La exportación de datos fue deseleccionada.
@@ -96,10 +96,10 @@ CREATE TABLE IF NOT EXISTS `tutores` (
   `id` int NOT NULL AUTO_INCREMENT,
   `nombre` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `correo` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `id_carrera` int NOT NULL,
+  `id_carrera` int DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_tutor_carrera` (`id_carrera`),
-  CONSTRAINT `fk_tutor_carrera` FOREIGN KEY (`id_carrera`) REFERENCES `carreras` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_tutor_carrera` FOREIGN KEY (`id_carrera`) REFERENCES `carreras` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- La exportación de datos fue deseleccionada.
