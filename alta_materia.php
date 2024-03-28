@@ -16,7 +16,7 @@ $result = $conn->query($sql);
 <body>
 <?php include "nav_bar.html"; ?>
 <div class="container mt-5 mb-5">
-    <a href="listado_materias.php" class="btn btn-info mb-3">Regresar</a>
+    <a href="listado_materias.php" class="btn btn-secondary mb-3">Regresar</a>
     <h2>Alta de Materia</h2>
     <form action="crud.php" method="POST">
         <div class="form-group">
@@ -33,7 +33,7 @@ $result = $conn->query($sql);
                 </div>
             <?php endwhile; ?>
         </div>
-        <button type="submit" class="btn btn-primary" name="alta_materia" <?=$result->num_rows == 0 ? 'disabled' : '' ?>>Agregar Materia</button>
+        <button type="submit" class="btn btn-primary" name="alta_materia">Agregar Materia</button>
     </form>
 </div>
 </body>

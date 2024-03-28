@@ -66,7 +66,7 @@ if(isset($_POST['export_materias'])) exportToXLS('materias', $materias_data);
                         $result_carreras = $conn->query($sql_carreras);
 
                         // Resultados de consulta
-                        if ($result_carreras->num_rows == 0) echo '<h4>--</h4>';
+                        if ($result_carreras->num_rows == 0) echo '<em>Sin asignar</em>';
                         else {
                             echo '<ul>';
                             while ($row_carrera = $result_carreras->fetch_assoc())
@@ -100,7 +100,7 @@ if(isset($_POST['export_materias'])) exportToXLS('materias', $materias_data);
 
         Swal.fire({
             title: "¿Estás seguro de eliminar?",
-            text: "Ningún dato podrá ser recuperado!",
+            text: "!Se eliminará su asignacion en las carreras y los registros que se tengan en las asesorías y tutorías!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD3333FF",

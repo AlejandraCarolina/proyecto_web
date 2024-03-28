@@ -1,6 +1,16 @@
 <?php
 include 'conexion.php';
 
+if(!isset($_GET['id'])) header('Location: listado_asesorias.php');
+
+// Validación de que exista la asesoria
+$id = $_GET['id'];
+$sql = "SELECT * FROM asesorias WHERE id='$id'";
+$result = $conn->query($sql);
+// Enviar alerta
+if($result->num_rows == 0 || $result->num_rows > 1) header('Location: listado_asesorias.php');
+$q_asesoria = $result->fetch_assoc();
+
 // Consulta de Carreras
 $sql = "SELECT * FROM carreras";
 $result = $conn->query($sql);
@@ -8,7 +18,7 @@ $result = $conn->query($sql);
 
 <html lang="es">
 <head>
-    <title>Alta de Asesorías</title>
+    <title>Editar Asesorías</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
@@ -18,8 +28,9 @@ $result = $conn->query($sql);
 <?php include "nav_bar.html"; ?>
 <div class="container mt-5 mb-5">
     <a href="listado_asesorias.php" class="btn btn-info mb-3">Regresar</a>
-    <h2>Alta de Asesoría</h2>
+    <h2>Editar Asesoría</h2>
     <form action="crud.php" method="POST">
+        <input type="hidden" name="id" id="id" value="<?=$q_asesoria['id']?>">
         <div class="row row-cols-3">
             <div class="form-group col">
                 <!-- Mostrar registros de Carreras -->
@@ -33,30 +44,30 @@ $result = $conn->query($sql);
             </div>
             <div class="form-group col">
                 <!-- Mostrar registros de Materias de la Carrera seleccionada -->
-                <label for="materia_carrera"><?= $result->num_rows == 0 ? 'No se encuentra ningúna materia asignada a esta carrera' : 'Materia:' ?></label>
-                <select class="form-control" name="materia" id="materia_carrera" disabled>
+                <label for="materia_carrera"><?= $result->num_rows == 0 ? 'No se encuentra ningúna materia asignada a esta carrera' : 'Materias:' ?></label>
+                <select class="form-control" name="materia" id="materia_carrera" <?= $result->num_rows == 0 ? 'disabled' : '' ?>>
                     <option value="0" selected disabled><?= $result->num_rows == 0 ? 'Sin carreras asignadas' : 'Seleccione una carrera primero' ?></option>
                     <!-- Más opciones através de JS -->
                 </select>
             </div>
             <div class="form-group col">
                 <label for="fecha_asesoria">Fecha:</label>
-                <input type="date" class="form-control" name="fecha" id="fecha_asesoria" required>
+                <input type="date" class="form-control" name="fecha" id="fecha_asesoria" value="<?=$q_asesoria['fecha_asesoria']?>" required>
             </div>
         </div>
         <div class="row row-cols-2">
             <div class="form-group col">
                 <!-- Mostrar registros de Asesores de la Carrera seleccionada -->
-                <label for="asesor"><?= $result->num_rows == 0 ? 'No se encuentra ningún asesor asignado a esta carrera' : 'Asesor:' ?></label>
-                <select class="form-control" name="asesor" id="asesor" disabled>
+                <label for="asesor"><?= $result->num_rows == 0 ? 'No se encuentra ningún asesor asignado a esta carrera' : 'Asesores:' ?></label>
+                <select class="form-control" name="asesor" id="asesor" <?= $result->num_rows == 0 ? 'disabled' : '' ?>>
                     <option value="0" selected disabled><?= $result->num_rows == 0 ? 'Sin asesores asignados' : 'Seleccione una carrera primero' ?></option>
                     <!-- Más opciones através de JS -->
                 </select>
             </div>
             <div class="form-group col">
                 <!-- Mostrar registros de Alumnos del Asesor seleccionado -->
-                <label for="alumno"><?= $result->num_rows == 0 ? 'No se encuentra ningún alumno asignado a este tutor' : 'Alumno:' ?></label>
-                <select class="form-control" name="alumno" id="alumno" disabled>
+                <label for="alumno"><?= $result->num_rows == 0 ? 'No se encuentra ningún alumno asignado a este tutor' : 'Alumnos:' ?></label>
+                <select class="form-control" name="alumno" id="alumno" <?= $result->num_rows == 0 ? 'disabled' : '' ?>>
                     <option value="0" selected disabled><?= $result->num_rows == 0 ? 'Sin alumnos asignados' : 'Seleccione un asesor primero' ?></option>
                     <!-- Más opciones através de JS -->
                 </select>
@@ -64,9 +75,9 @@ $result = $conn->query($sql);
         </div>
         <div class="form-group">
             <label for="observaciones">Observaciones</label>
-            <textarea rows="2" name="observaciones" id="observaciones" class="form-control" required></textarea>
+            <textarea rows="2" name="observaciones" id="observaciones" class="form-control" required><?=$q_asesoria['observaciones']?></textarea>
         </div>
-        <button type="submit" class="btn btn-primary" id="envio" name="alta_asesoria" <?=$result->num_rows == 0 ? 'disabled' : '' ?>>Agregar Asesoria</button>
+        <button type="submit" class="btn btn-primary" id="envio" name="cambio_asesoria" <?=$result->num_rows == 0 ? 'disabled' : '' ?>>Guardar Cambios</button>
     </form>
 </div>
 </body>
@@ -81,6 +92,19 @@ $result = $conn->query($sql);
         const materiaSelect = $('#materia_carrera');
         const asesorSelect = $('#asesor');
         const alumnoSelect = $('#alumno');
+
+        // Realizar consulta y para despues identificar y seleccionarlas en el formulario
+        let data_a_t;
+        $.ajax({
+            type: 'POST',
+            url: 'crud.php',
+            data: {q_asesoria: $('#id').val()},
+            dataType: 'json',
+            success: function (data) {
+                data_a_t = data;
+                carreraSelect.val(data.id_carrera).trigger('change');
+            }
+        });
 
         // Para select 'carrera'
         carreraSelect.change(function() {
@@ -97,9 +121,12 @@ $result = $conn->query($sql);
                         materiaSelect.prop('disabled', false);
                         materiaSelect.append('<option value="0" selected disabled>Selecccione una materia</option>');
                         $.each(materias, function(key, materia_carrera) {
-                            materiaSelect.append('<option value="' + materia_carrera.id + '">' + materia_carrera.nombre + '</option>');
+                            materiaSelect.append('<option value="' + materia_carrera.id + '" >' + materia_carrera.nombre + '</option>');
+
+                            // selección
+                            if(data_a_t.id_materia === materia_carrera.id) materiaSelect.val(materia_carrera.id).trigger('change');
                         });
-                    } else{
+                    } else {
                         materiaSelect.append('<option value="0" selected disabled>Sin materias asignadas</option>');
                         materiaSelect.prop('disabled', true);
                     }
@@ -110,15 +137,18 @@ $result = $conn->query($sql);
                         asesorSelect.prop('disabled', false);
                         asesorSelect.append('<option value="0" selected disabled>Seleccione un asesor</option>');
                         $.each(asesores, function(key, asesor) {
-                            asesorSelect.append('<option value="' + asesor.id + '">' + asesor.nombre + '</option>');
+                            asesorSelect.append('<option value="' + asesor.id + '" ' + (data_a_t.id_asesor === asesor.id ? 'selected' : '') + '>' + asesor.nombre + '</option>');
+
+                            // selección
+                            if(data_a_t.id_asesor === asesor.id) asesorSelect.val(asesor.id).trigger('change');
                         });
-                    } else{
+                    } else {
                         asesorSelect.append('<option value="0" selected disabled>Sin asesores asignados</option>');
                         asesorSelect.prop('disabled', true);
                     }
 
                     alumnoSelect.empty();
-                    alumnoSelect.append('<option value="0" selected disabled>Seleccione un asesor primero</option>');
+                    alumnoSelect.append('<option value="0" selected disabled>Seleccione una asesor primero</option>');
                     alumnoSelect.prop('disabled', true);
                 },
                 error: function(xhr, status, error) {
@@ -146,6 +176,9 @@ $result = $conn->query($sql);
                         alumnoSelect.append('<option value="0" selected disabled>Seleccione un alumno</option>');
                         $.each(data, function (key, alumno) {
                             alumnoSelect.append('<option value="' + alumno.id + '">' + alumno.nombre + '</option>');
+
+                            // selección
+                            if(data_a_t.id_alumno === alumno.id) alumnoSelect.val(alumno.id).trigger('change');
                         });
                     } else {
                         alumnoSelect.append('<option value="0" selected disabled>Sin alumnos asignados</option>');

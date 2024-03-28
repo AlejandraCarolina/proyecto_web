@@ -32,7 +32,11 @@ $result = $conn->query($sql);
 
         <div class="form-group">
             <!-- Mostrar registros de Carreras -->
-            <label><?= $result->num_rows == 0 ? 'No se encuentra ningúna carrera a la que se le pueda asignar' : 'Carrera:' ?></label>
+            <label>Carrera:</label>
+            <div class="custom-control custom-radio">
+                <input type="radio" class="custom-control-input" name="carrera" id="0" value="0" checked>
+                <label class="custom-control-label" for="0">Sin asignar</label>
+            </div>
             <?php while ($row = $result->fetch_assoc()): ?>
                 <div class="custom-control custom-radio">
                     <input type="radio" class="custom-control-input" name="carrera" id="<?=$row['id']?>" value="<?=$row['id']?>">
@@ -40,7 +44,7 @@ $result = $conn->query($sql);
                 </div>
             <?php endwhile; ?>
         </div>
-        <button type="submit" class="btn btn-primary" name="alta_tutor" <?=$result->num_rows == 0 ? 'disabled' : '' ?>>Agregar Tutor</button>
+        <button type="submit" class="btn btn-primary" name="alta_tutor">Agregar Tutor</button>
     </form>
 </div>
 </body>
@@ -48,19 +52,19 @@ $result = $conn->query($sql);
 
 <script>
     // Validar selección de carrera
-    document.addEventListener("DOMContentLoaded", function() {
-        document.querySelector('form').addEventListener('submit', function(event) {
-            // Validamos que haya una carerera seleccionada
-            const carrerasSeleccionadas = document.querySelectorAll('input[name="carrera"]:checked');
-            if (carrerasSeleccionadas.length === 0 || carrerasSeleccionadas.length > 1) {
-                event.preventDefault();
-                Swal.fire({
-                    title:  "¡Advertencia!",
-                    text:   "Debes de seleccionar una carrera",
-                    icon:   "warning"
-                });
-            }
-        });
-    });
+    // document.addEventListener("DOMContentLoaded", function() {
+    //     document.querySelector('form').addEventListener('submit', function(event) {
+    //         // Validamos que haya una carerera seleccionada
+    //         const carrerasSeleccionadas = document.querySelectorAll('input[name="carrera"]:checked');
+    //         if (carrerasSeleccionadas.length === 0 || carrerasSeleccionadas.length > 1) {
+    //             event.preventDefault();
+    //             Swal.fire({
+    //                 title:  "¡Advertencia!",
+    //                 text:   "Debes de seleccionar una carrera",
+    //                 icon:   "warning"
+    //             });
+    //         }
+    //     });
+    // });
 </script>
 

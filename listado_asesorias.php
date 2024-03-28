@@ -3,7 +3,7 @@ include 'conexion.php';
 
 // Consulta para obtener todos los registros de Tutorias
 $sql = "SELECT a.id, c.nombre AS 'carrera', m.nombre AS 'materia', al.nombre AS 'alumno', 
-    t.nombre AS 'asesor', observaciones, fecha_tutoria  FROM asesorias a JOIN carreras c ON a.id_carrera=c.id 
+    t.nombre AS 'asesor', observaciones, fecha_asesoria  FROM asesorias a JOIN carreras c ON a.id_carrera=c.id 
         JOIN materias m ON a.id_materia=m.id JOIN alumnos al ON a.id_alumno=al.id JOIN tutores t ON a.id_asesor=t.id
     ORDER BY a.id";
 $result = $conn->query($sql);
@@ -44,9 +44,9 @@ $result = $conn->query($sql);
                 <td><?=$row['alumno']?></td>
                 <td><?=$row['asesor']?></td>
                 <td><?=$row['observaciones']?></td>
-                <td><?=$row['fecha_tutoria']?></td>
+                <td><?=$row['fecha_asesoria']?></td>
                 <td>
-                    <a href="editar_tutor.php?id=<?=$row['id']?>" class="btn btn-info">Editar</a>
+                    <a href="editar_asesoria.php?id=<?=$row['id']?>" class="btn btn-info">Editar</a>
                     <form class="d-inline-block" onsubmit="eliminar(event, <?=$row['id']?>)" method="POST">
                         <button type="submit" class="btn btn-danger">Eliminar</button>
                     </form>
@@ -67,7 +67,7 @@ $result = $conn->query($sql);
 
         Swal.fire({
             title: "¿Estás seguro de eliminar?",
-            text: "No podrás recuperar ningún dato!",
+            text: "¡No podrás recuperar ningún dato de esta asesoría!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#DD3333FF",
@@ -75,7 +75,7 @@ $result = $conn->query($sql);
             cancelButtonText: "Cancelar"
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = 'crud.php?eliminar_tutorria='+id;
+                window.location.href = 'crud.php?eliminar_asesoria='+id;
             }
         });
     }
