@@ -28,7 +28,7 @@ if(isset($_POST['cambio_alumno'])){
 
 
     //query de actualización en la tabla alumnos
-    $sql = "UPDATE alumnos SET matricula='$matricula', nombre='$nombre', correo='$correo', id_carrera='$id_carrera', id_tutor='$id_tutor' WHERE id=$id";
+    $sql = "UPDATE alumnos SET matricula='$matricula', nombre='$nombre', correo='$email', id_carrera='$id_carrera', id_tutor='$id_tutor' WHERE id=$id";
     $result = $conn->query($sql);
     header("Location: listado_alumno.php");
 
