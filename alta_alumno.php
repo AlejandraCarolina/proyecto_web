@@ -17,8 +17,8 @@
                     <input type="text" class="form-control" id="nombre" name="nombre" required>
                 </div>
                 <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" class="form-control" id="email" name="email" required>
+                    <label for="correo">Email:</label>
+                    <input type="correo" class="form-control" id="correo" name="correo" required>
                 </div>
                 <div class="form-group">
                     <label for="id_carrera">Carrera:</label>
@@ -31,7 +31,7 @@
                            $result_carrera = $conn->query($sql_carrera);
                            while($row = $result_carrera->fetch_assoc()){
                         ?>
-                        <option value="<?php echo $row['id_carrera']; ?>"><?php echo $row['nombre']; ?></option>
+                        <option value="<?php echo $row['id']; ?>"><?php echo $row['nombre']; ?></option>
                         <?php
                            }
                            
@@ -50,7 +50,7 @@
                            $result_tutor = $conn->query($sql_tutor);
                            while($row = $result_tutor->fetch_assoc()){
                         ?>
-                        <option value="<?php echo $row['id_tutor']; ?>"><?php echo $row['nombre']; ?></option>
+                        <option value="<?php echo $row['id']; ?>"><?php echo $row['nombre']; ?></option>
                         <?php
                            }
                         ?>
@@ -61,5 +61,3 @@
         </div>
     </body>
 </html>
-
-

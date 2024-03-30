@@ -6,13 +6,13 @@ include 'conexion.php';
 if(isset($_POST['alta_alumno'])){
     $matricula = $_POST['matricula'];
     $nombre = $_POST['nombre'];
-    $edad = $_POST['edad'];
-    $email = $_POST['email'];
+    $email = $_POST['correo'];
     $id_carrera = $_POST['id_carrera'];
+    $id_tutor = $_POST['id_tutor'];
 
 // Guardar valores a la tabla alumnos
 
-    $sql = "INSERT INTO alumnos (matricula, nombre, edad, email, id_carrera) VALUES ('$matricula', '$nombre', '$edad', '$email', '$id_carrera')";
+    $sql = "INSERT INTO alumnos (matricula, nombre, correo, id_carrera, id_tutor) VALUES ('$matricula', '$nombre', '$email', '$id_carrera', '$id_tutor')";
     $result = $conn->query($sql);
     header("Location: listado_alumno.php");
 }
@@ -284,4 +284,15 @@ if(isset($_GET['eliminar_tutoria'])) {
     $result = $conn->query($sql);
 
     header("Location: listado_tutorias.php");
+}
+
+//Alta de carreras
+if(isset($_POST['alta_carrera'])){
+    $nombre = $_POST['nombre'];
+
+    //Guardar valores a la tabla carreras
+
+    $sql = "INSERT INTO carreras (nombre) VALUES ('$nombre')";
+    $result = $conn->query($sql);
+    header("Location: listado_carreras.php");
 }
