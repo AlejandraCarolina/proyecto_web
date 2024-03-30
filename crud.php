@@ -19,15 +19,16 @@ if(isset($_POST['alta_alumno'])){
 
 // Cambios de alumnos
 if(isset($_POST['cambio_alumno'])){
-    $id = $_POST['id'];
+    $id = $_POST['id_alumno'];
     $matricula = $_POST['matricula'];
     $nombre = $_POST['nombre'];
-    $edad = $_POST['edad'];
-    $email = $_POST['email'];
+    $email = $_POST['correo'];
     $id_carrera = $_POST['id_carrera'];
+    $id_tutor = $_POST['id_tutor'];
+
 
     //query de actualización en la tabla alumnos
-    $sql = "UPDATE alumnos SET matricula='$matricula', nombre='$nombre',edad='$edad', email='$email', id_carrera='$id_carrera' WHERE id=$id";
+    $sql = "UPDATE alumnos SET matricula='$matricula', nombre='$nombre', correo='$correo', id_carrera='$id_carrera', id_tutor='$id_tutor' WHERE id=$id";
     $result = $conn->query($sql);
     header("Location: listado_alumno.php");
 
