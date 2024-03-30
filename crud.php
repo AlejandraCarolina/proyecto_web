@@ -34,6 +34,17 @@ if(isset($_POST['cambio_alumno'])){
 
 }
 
+//Baja de alumnos
+if(isset($_GET['eliminar_alumno'])){
+    $id = $_GET['eliminar_alumno'];
+    
+    $sql = "DELETE FROM alumnos WHERE id=$id";
+    $result = $conn->query($sql);
+    header("Location: listado_alumno.php");
+}
+
+
+
 // Alta de Tutores
 if(isset($_POST['alta_tutor'])) {
     $nombre = $_POST['nombre'];

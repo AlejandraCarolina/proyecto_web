@@ -16,6 +16,7 @@ $result = $conn->query($sql);
     <head>
         <title>Listado de Alumnos</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         
     </head>
     <body>
@@ -51,8 +52,7 @@ $result = $conn->query($sql);
                         <td><?= $row['tutor_nombre'] == null ? '<em>Sin asignar</em>' : $row['tutor_nombre'] ?></td>
                         <td>
                                 <a href="editar_alumno.php?id=<?= $row['id']?>" class="btn btn-primary">Editar</a>
-                                <a href="crud.php?eliminar_alumno=<?= $row['id']?>" class="btn btn-danger">Eliminar</a>
-<!--                                <a href="ver_calificaciones.php?id=--><?php //= $row['id']; ?><!--" class="btn btn-secondary">Ver calificaciones</a>-->
+                                <a href="crud.php?eliminar_alumno=<?= $row['id']?>" class="btn btn-danger" onclick="return mostrarSweetAlert(<?php echo $row['id']; ?>)">Eliminar</a>
                         </td>
                     </tr>
                     <?php } ?>
@@ -64,5 +64,24 @@ $result = $conn->query($sql);
             <br>
             <br>
         </div>
+    <!--script de ventana para eliminar-->
+        <script>
+        function mostrarSweetAlert(id) {
+             Swal.fire({
+            title: '¿Estás seguro?',
+            text: "¡No podrás revertir esto!",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, ¡elimínalo!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "crud.php?eliminar_alumno=" + id;
+            }
+        });
+
+        return false;
+    }
+</script>
     </body>
 </html>
