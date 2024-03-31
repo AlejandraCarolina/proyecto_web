@@ -36,7 +36,7 @@
                         <td><?php echo $row['nombre']; ?></td>
                         <td>
                             <!-- el get se representa con el signo de "?" y el nombre de la variable-->
-                            <a href="editar_materia.php?id_carrera=<?php echo $row['id']; ?>" class="btn btn-primary">Editar</a>
+                            <a href="editar_carrera.php?id=<?php echo $row['id']; ?>" class="btn btn-primary">Editar</a>
                             <form class="d-inline" action="crud.php" method="POST">
                                 <input type="hidden" name="id_carrera" value="<?php echo $row['id']; ?>">
                                 <button type="submit" class="btn btn-danger" name="eliminar_carrera">Eliminar</button>

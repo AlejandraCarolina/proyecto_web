@@ -308,3 +308,16 @@ if(isset($_POST['alta_carrera'])){
     $result = $conn->query($sql);
     header("Location: listado_carreras.php");
 }
+
+// Editar Carreras
+
+if(isset($_POST['cambio_carrera'])){
+    $id = $_POST['id'];
+    $nombre = $_POST['nombre'];
+
+    //query de actualización en la tabla carreras
+
+    $sql = "UPDATE carreras SET nombre='$nombre' WHERE id=$id";
+    $result = $conn->query($sql);
+    header("Location: listado_carreras.php");
+}
