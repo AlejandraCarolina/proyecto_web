@@ -6,32 +6,44 @@ include 'conexion.php';
 if(isset($_POST['alta_alumno'])){
     $matricula = $_POST['matricula'];
     $nombre = $_POST['nombre'];
-    $edad = $_POST['edad'];
-    $email = $_POST['email'];
+    $email = $_POST['correo'];
     $id_carrera = $_POST['id_carrera'];
+    $id_tutor = $_POST['id_tutor'];
 
 // Guardar valores a la tabla alumnos
 
-    $sql = "INSERT INTO alumnos (matricula, nombre, edad, email, id_carrera) VALUES ('$matricula', '$nombre', '$edad', '$email', '$id_carrera')";
+    $sql = "INSERT INTO alumnos (matricula, nombre, correo, id_carrera, id_tutor) VALUES ('$matricula', '$nombre', '$email', '$id_carrera', '$id_tutor')";
     $result = $conn->query($sql);
     header("Location: listado_alumno.php");
 }
 
 // Cambios de alumnos
 if(isset($_POST['cambio_alumno'])){
-    $id = $_POST['id'];
+    $id = $_POST['id_alumno'];
     $matricula = $_POST['matricula'];
     $nombre = $_POST['nombre'];
-    $edad = $_POST['edad'];
-    $email = $_POST['email'];
+    $email = $_POST['correo'];
     $id_carrera = $_POST['id_carrera'];
+    $id_tutor = $_POST['id_tutor'];
+
 
     //query de actualización en la tabla alumnos
-    $sql = "UPDATE alumnos SET matricula='$matricula', nombre='$nombre',edad='$edad', email='$email', id_carrera='$id_carrera' WHERE id=$id";
+    $sql = "UPDATE alumnos SET matricula='$matricula', nombre='$nombre', correo='$email', id_carrera='$id_carrera', id_tutor='$id_tutor' WHERE id=$id";
     $result = $conn->query($sql);
     header("Location: listado_alumno.php");
 
 }
+
+//Baja de alumnos
+if(isset($_GET['eliminar_alumno'])){
+    $id = $_GET['eliminar_alumno'];
+    
+    $sql = "DELETE FROM alumnos WHERE id=$id";
+    $result = $conn->query($sql);
+    header("Location: listado_alumno.php");
+}
+
+
 
 // Alta de Tutores
 if(isset($_POST['alta_tutor'])) {
@@ -285,4 +297,51 @@ if(isset($_GET['eliminar_tutoria'])) {
     $result = $conn->query($sql);
 
     header("Location: listado_tutorias.php");
+}
+
+//Alta de carreras
+if(isset($_POST['alta_carrera'])){
+    $nombre = $_POST['nombre'];
+
+    //Guardar valores a la tabla carreras
+
+    $sql = "INSERT INTO carreras (nombre) VALUES ('$nombre')";
+    $result = $conn->query($sql);
+    header("Location: listado_carreras.php");
+}
+
+// Editar Carreras
+
+if(isset($_POST['cambio_carrera'])){
+    $id = $_POST['id'];
+    $nombre = $_POST['nombre'];
+
+    //query de actualización en la tabla carreras
+
+    $sql = "UPDATE carreras SET nombre='$nombre' WHERE id=$id";
+    $result = $conn->query($sql);
+    header("Location: listado_carreras.php");
+}
+
+//Eliminar carrera
+if (isset($_GET['eliminar_carrera'])) {
+    $id_carrera = $_GET['id_carrera'];
+
+    // si la carrrera tiene alumnos
+    $sql_check = "SELECT * FROM alumnos WHERE id_carrera = $id_carrera";
+    $result_check = $conn->query($sql_check);
+
+    // Si hay
+    if ($result_check->num_rows > 0) {
+        echo "<script>alert('no se puede porque tiene alumnos.');
+        window.location.href = 'listado_carreras.php';
+        </script>";
+    } else {//no hay
+        //consulta para borrarla
+        $sql_delete = "DELETE FROM carreras WHERE id = $id_carrera";
+        $result = $conn->query($sql_delete);
+        echo "<script>alert('eliminada');
+        window.location.href = 'listado_carreras.php';
+        </script>";
+    }
 }
