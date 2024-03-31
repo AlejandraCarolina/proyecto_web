@@ -64,7 +64,7 @@ if(isset($_POST['export_tutores'])) exportToXLS('tutores', $tutores_data);
                 <td><?=$row['nombre_carrera'] == null ? '<em>Sin asignar</em>' : $row['nombre_carrera']?></td>
                 <td>
                     <a href="editar_tutor.php?id=<?=$row['id']?>" class="btn btn-info">Editar</a>
-                    <form class="d-inline-block" onsubmit="eliminar(event, <?=$row['id']?>)" method="POST">
+                    <form class="d-inline" onsubmit="eliminar(event, <?=$row['id']?>)" method="POST">
                         <button type="submit" class="btn btn-danger">Eliminar</button>
                     </form>
                 </td>

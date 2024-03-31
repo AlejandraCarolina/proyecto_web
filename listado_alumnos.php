@@ -72,7 +72,9 @@ if (isset($_POST['export_alumnos'])) {
                 <td><?= $row['carrera_nombre'] == null ? '<em>Sin asignar</em>' : $row['carrera_nombre'] ?></td>
                 <td><?= $row['tutor_nombre'] == null ? '<em>Sin asignar</em>' : $row['tutor_nombre'] ?></td>
                 <td>
-                    <a href="editar_alumno.php?id=<?= $row['id'] ?>" class="btn btn-primary">Editar</a>
+                    <a href="listado_asesorias.php?id_alumno=<?=$row['id']?>" class="btn btn-light">Asesorías</a>
+                    <a href="listado_tutorias.php?id_alumno=<?=$row['id']?>" class="btn btn-warning">Tutorías</a>
+                    <a href="editar_alumno.php?id=<?= $row['id'] ?>" class="btn btn-info">Editar</a>
                     <a href="crud.php?eliminar_alumno=<?= $row['id'] ?>" class="btn btn-danger"
                        onclick="return mostrarSweetAlert(<?php echo $row['id']; ?>)">Eliminar</a>
                 </td>
@@ -81,9 +83,9 @@ if (isset($_POST['export_alumnos'])) {
 
         </tbody>
     </table>
-    <a href="alta_alumno.php" class="btn btn-success">Agregar Alumno</a>
+    <a href="alta_alumno.php" class="btn btn-primary">Agregar Alumno</a>
     <form action="" method="POST" class="d-inline">
-        <input type="submit" name="export_alumnos" value="Exportar a XLS" class="btn btn-info">
+        <input type="submit" name="export_alumnos" value="Exportar a XLS" class="btn btn-success">
     </form>
     <br>
     <br>

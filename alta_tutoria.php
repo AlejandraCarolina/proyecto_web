@@ -17,9 +17,10 @@ $result = $conn->query($sql);
 <body>
 <?php include "nav_bar.html"; ?>
 <div class="container mt-5 mb-5">
-    <a href="listado_asesorias.php" class="btn btn-info mb-3">Regresar</a>
+    <a href="listado_asesorias.php" class="btn btn-secondary mb-3">Regresar</a>
     <h2>Alta de Tutoría</h2>
     <form action="crud.php" method="POST">
+        <?= isset($_GET['id_alumno']) ? "<input type='hidden' name='id_alumno' id='id_alumno' value='".$_GET['id_alumno']."'>" : '' ?>
         <div class="row row-cols-3">
             <div class="form-group col">
                 <!-- Mostrar registros de Carreras -->
@@ -82,6 +83,20 @@ $result = $conn->query($sql);
         const tutorSelect = $('#tutor');
         const alumnoSelect = $('#alumno');
 
+        // Realizar consulta en caso de que sea para un alumno previamente seleccionado para seleccionar después
+        let data_al = null;
+        $.ajax({
+            type: 'POST',
+            url: 'crud.php',
+            data: {q_alumno: '<?= $_GET['id_alumno'] ?? '' ?>'},
+            dataType: 'json',
+            success: function (data) {
+                data_al = data;
+                console.log(data);
+                carreraSelect.val(data.id_carrera).trigger('change');
+            },
+        });
+
         // Para select 'carrera'
         carreraSelect.change(function() {
             const id_carrera = $(this).val();
@@ -111,6 +126,8 @@ $result = $conn->query($sql);
                         tutorSelect.append('<option value="0" selected disabled>Seleccione un tutor</option>');
                         $.each(tutores, function(key, tutor) {
                             tutorSelect.append('<option value="' + tutor.id + '">' + tutor.nombre + '</option>');
+                            // Seleccion
+                            if(data_al != null && data_al.id_tutor === tutor.id) tutorSelect.val(tutor.id).trigger('change');
                         });
                     } else {
                         tutorSelect.append('<option value="0" selected disabled>Sin tutores asignados</option>');
@@ -146,6 +163,9 @@ $result = $conn->query($sql);
                         alumnoSelect.append('<option value="0" selected disabled>Seleccione un alumno</option>');
                         $.each(data, function (key, alumno) {
                             alumnoSelect.append('<option value="' + alumno.id + '">' + alumno.nombre + '</option>');
+
+                            // Seleccion
+                            if(data_al != null && data_al.id === alumno.id) alumnoSelect.val(alumno.id).trigger('change');
                         });
                     } else {
                         alumnoSelect.append('<option value="0" selected disabled>Sin alumnos asignados</option>');

@@ -10,11 +10,10 @@ if(isset($_POST['alta_alumno'])){
     $id_carrera = $_POST['id_carrera'];
     $id_tutor = $_POST['id_tutor'];
 
-// Guardar valores a la tabla alumnos
-
+    // Guardar valores a la tabla alumnos
     $sql = "INSERT INTO alumnos (matricula, nombre, correo, id_carrera, id_tutor) VALUES ('$matricula', '$nombre', '$email', '$id_carrera', '$id_tutor')";
     $result = $conn->query($sql);
-    header("Location: listado_alumno.php");
+    header("Location: listado_alumnos.php");
 }
 
 // Cambios de alumnos
@@ -26,11 +25,10 @@ if(isset($_POST['cambio_alumno'])){
     $id_carrera = $_POST['id_carrera'];
     $id_tutor = $_POST['id_tutor'];
 
-
     //query de actualización en la tabla alumnos
     $sql = "UPDATE alumnos SET matricula='$matricula', nombre='$nombre', correo='$email', id_carrera='$id_carrera', id_tutor='$id_tutor' WHERE id=$id";
     $result = $conn->query($sql);
-    header("Location: listado_alumno.php");
+    header("Location: listado_alumnos.php");
 
 }
 
@@ -40,10 +38,8 @@ if(isset($_GET['eliminar_alumno'])){
     
     $sql = "DELETE FROM alumnos WHERE id=$id";
     $result = $conn->query($sql);
-    header("Location: listado_alumno.php");
+    header("Location: listado_alumnos.php");
 }
-
-
 
 // Alta de Tutores
 if(isset($_POST['alta_tutor'])) {
@@ -191,6 +187,21 @@ if(isset($_POST['q_alumno_tutor'])) {
     echo json_encode($data);
 }
 
+// Consulta para la previa alta de asesorias/tutorias - Alumno es previamente seleccionado
+if(isset($_POST['q_alumno'])) {
+    $id_alumno = $_POST['q_alumno'];
+    // Si se envia un valor vacio
+    if(empty($id_alumno)) header("Location: alta_asesoria.php");
+    // Si se envia un valor correcto
+    else {
+        $alumno = $conn->query("SELECT * FROM alumnos WHERE id='$id_alumno'");
+        // Si no se haya registro del alumno o son más de uno, entonces dar de alta de manera general
+        if($alumno->num_rows == 0 || $alumno->num_rows > 1) header("Location: alta_asesoria.php");
+        // Caso contrario, imprimir en JSON
+        echo json_encode($alumno->fetch_assoc());
+    }
+}
+
 // Alta de asesorias
 if(isset($_POST['alta_asesoria'])) {
     $id_carrera = $_POST['carrera'];
@@ -204,7 +215,7 @@ if(isset($_POST['alta_asesoria'])) {
             VALUES ('$id_carrera', '$id_materia', '$id_alumno', '$id_asesor', '$observaciones', '$fecha_asesoria')";
     $result = $conn->query($sql);
 
-    header("Location: listado_asesorias.php");
+    header("Location: listado_asesorias.php".(isset($_POST['id_alumno']) ? '?id_alumno='.$id_alumno : ''));
 }
 
 // Consulta previa para el cambio de Asesoria
@@ -304,20 +315,17 @@ if(isset($_POST['alta_carrera'])){
     $nombre = $_POST['nombre'];
 
     //Guardar valores a la tabla carreras
-
     $sql = "INSERT INTO carreras (nombre) VALUES ('$nombre')";
     $result = $conn->query($sql);
     header("Location: listado_carreras.php");
 }
 
 // Editar Carreras
-
 if(isset($_POST['cambio_carrera'])){
     $id = $_POST['id'];
     $nombre = $_POST['nombre'];
 
     //query de actualización en la tabla carreras
-
     $sql = "UPDATE carreras SET nombre='$nombre' WHERE id=$id";
     $result = $conn->query($sql);
     header("Location: listado_carreras.php");
@@ -327,21 +335,7 @@ if(isset($_POST['cambio_carrera'])){
 if (isset($_GET['eliminar_carrera'])) {
     $id_carrera = $_GET['id_carrera'];
 
-    // si la carrrera tiene alumnos
-    $sql_check = "SELECT * FROM alumnos WHERE id_carrera = $id_carrera";
-    $result_check = $conn->query($sql_check);
-
-    // Si hay
-    if ($result_check->num_rows > 0) {
-        echo "<script>alert('no se puede porque tiene alumnos.');
-        window.location.href = 'listado_carreras.php';
-        </script>";
-    } else {//no hay
-        //consulta para borrarla
-        $sql_delete = "DELETE FROM carreras WHERE id = $id_carrera";
-        $result = $conn->query($sql_delete);
-        echo "<script>alert('eliminada');
-        window.location.href = 'listado_carreras.php';
-        </script>";
-    }
+    $sql_delete = "DELETE FROM carreras WHERE id = $id_carrera";
+    $result = $conn->query($sql_delete);
+    header("Location: listado_carreras.php");
 }

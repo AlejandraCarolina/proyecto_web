@@ -4,9 +4,49 @@ include 'conexion.php';
 // Consulta para obtener todos los registros de Tutorias
 $sql = "SELECT a.id, c.nombre AS 'carrera', m.nombre AS 'materia', al.nombre AS 'alumno', 
     t.nombre AS 'tutor', observaciones, fecha_tutoria  FROM tutorias a JOIN carreras c ON a.id_carrera=c.id 
-        JOIN materias m ON a.id_materia=m.id JOIN alumnos al ON a.id_alumno=al.id JOIN tutores t ON a.id_tutor=t.id
-    ORDER BY a.id";
+        JOIN materias m ON a.id_materia=m.id JOIN alumnos al ON a.id_alumno=al.id JOIN tutores t ON a.id_tutor=t.id ";
+// En caso de que sease para un alumno pero no se defina el id
+if(isset($_GET['id_alumno']) && empty($_GET['id_alumno'])) header('Location: listado_tutorias.php');
+// En caso de que sease para un alumno con id definido
+else if (!empty($_GET['id_alumno'])) {
+    $sql .= "WHERE id_alumno = ".$_GET['id_alumno']." ORDER BY a.id";
+    // Almacenamos los datos del alumno definido en caso de que exista
+    $alumno = $conn->query("SELECT * FROM alumnos WHERE id=".$_GET['id_alumno']);
+}
+// En caso de que no sea para un alumno, sino para todas las asesorias
+else $sql .= "ORDER BY a.id";
 $result = $conn->query($sql);
+
+if(isset($alumno)) {
+    if($alumno->num_rows == 0 || $alumno->num_rows > 1) header('Location: listado_alumnos.php');
+    else $d_alumno = $alumno->fetch_assoc();
+}
+
+function exportToXLS($filename, $data) {
+    header('Content-Type: application/vnd.ms-excel');
+    header('Content-Disposition: attachment; filename="' . $filename . '.xls"');
+
+    echo '<table border="1">';
+    foreach ($data as $row) {
+        echo '<tr>';
+        foreach ($row as $column) {
+            echo '<td>' . $column . '</td>';
+        }
+        echo '</tr>';
+    }
+    echo '</table>';
+}
+
+$tutorias_data = [];
+if($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $tutorias_data = $row;
+    }
+    $result = $conn->query($sql);
+}
+
+if(isset($_POST['export_tutorias'])) exportToXLS('tutorias'.(isset($alumno) ? '_'.$d_alumno['matricula'] : ''), $tutorias_data);
+
 ?>
 
 <html lang="es">
@@ -47,7 +87,7 @@ $result = $conn->query($sql);
                 <td><?=$row['fecha_tutoria']?></td>
                 <td>
                     <a href="editar_tutoria.php?id=<?=$row['id']?>" class="btn btn-info">Editar</a>
-                    <form class="d-inline-block" onsubmit="eliminar(event, <?=$row['id']?>)" method="POST">
+                    <form class="d-inline" onsubmit="eliminar(event, <?=$row['id']?>)" method="POST">
                         <button type="submit" class="btn btn-danger">Eliminar</button>
                     </form>
                 </td>
@@ -55,7 +95,10 @@ $result = $conn->query($sql);
         <?php endwhile; ?>
         </tbody>
     </table>
-    <a href="alta_tutoria.php" class="btn btn-primary">Agregar Tutoria</a>
+    <form action="" class="d-inline" method="POST">
+        <a href="alta_tutoria.php<?= isset($alumno) ? '?id_alumno='.$d_alumno['id'] : ''?>" class="btn btn-primary">Agregar Tutoria</a>
+        <input type="submit" name="export_tutorias" value="Exportar a XLS" class="btn btn-success">
+    </form>
 </div>
 </body>
 </html>
