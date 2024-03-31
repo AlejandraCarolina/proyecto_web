@@ -11,6 +11,8 @@
     <head>
         <title>Carreras</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
 
     </head>
     <body>
@@ -37,7 +39,7 @@
                         <td>
                             <!-- el get se representa con el signo de "?" y el nombre de la variable-->
                             <a href="editar_carrera.php?id=<?php echo $row['id']; ?>" class="btn btn-primary">Editar</a>
-                            <form class="d-inline" action="crud.php" method="POST">
+                            <form class="d-inline" action="crud.php" method="GET">
                                 <input type="hidden" name="id_carrera" value="<?php echo $row['id']; ?>">
                                 <button type="submit" class="btn btn-danger" name="eliminar_carrera">Eliminar</button>
                             </form>
@@ -53,5 +55,6 @@
             <br>
             <br>
         </div>
+
     </body>
 </html>

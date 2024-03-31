@@ -321,3 +321,26 @@ if(isset($_POST['cambio_carrera'])){
     $result = $conn->query($sql);
     header("Location: listado_carreras.php");
 }
+
+//Eliminar carrera
+if (isset($_GET['eliminar_carrera'])) {
+    $id_carrera = $_GET['id_carrera'];
+
+    // si la carrrera tiene alumnos
+    $sql_check = "SELECT * FROM alumnos WHERE id_carrera = $id_carrera";
+    $result_check = $conn->query($sql_check);
+
+    // Si hay
+    if ($result_check->num_rows > 0) {
+        echo "<script>alert('no se puede porque tiene alumnos.');
+        window.location.href = 'listado_carreras.php';
+        </script>";
+    } else {//no hay
+        //consulta para borrarla
+        $sql_delete = "DELETE FROM carreras WHERE id = $id_carrera";
+        $result = $conn->query($sql_delete);
+        echo "<script>alert('eliminada');
+        window.location.href = 'listado_carreras.php';
+        </script>";
+    }
+}
