@@ -2,7 +2,7 @@
 // Integrar archivo de conexión
 include 'conexion.php';
 
-// Alta de archivo de conexión
+// Alta de alumno
 if(isset($_POST['alta_alumno'])){
     $matricula = $_POST['matricula'];
     $nombre = $_POST['nombre'];
@@ -10,12 +10,12 @@ if(isset($_POST['alta_alumno'])){
     $id_carrera = $_POST['id_carrera'];
     $id_tutor = $_POST['id_tutor'];
 
-// Guardar valores a la tabla alumnos
-
+    // Guardar valores a la tabla alumnos
     $sql = "INSERT INTO alumnos (matricula, nombre, correo, id_carrera, id_tutor) VALUES ('$matricula', '$nombre', '$email', '$id_carrera', '$id_tutor')";
     $result = $conn->query($sql);
     header("Location: listado_alumno.php");
 }
+
 
 // Cambios de alumnos
 if(isset($_POST['cambio_alumno'])){
