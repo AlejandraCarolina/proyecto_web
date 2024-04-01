@@ -2,7 +2,7 @@
 // Integrar archivo de conexión
 include 'conexion.php';
 
-// Alta de archivo de conexión
+// Alta de alumno
 if(isset($_POST['alta_alumno'])){
     $matricula = $_POST['matricula'];
     $nombre = $_POST['nombre'];
@@ -15,6 +15,7 @@ if(isset($_POST['alta_alumno'])){
     $result = $conn->query($sql);
     header("Location: listado_alumnos.php");
 }
+
 
 // Cambios de alumnos
 if(isset($_POST['cambio_alumno'])){
