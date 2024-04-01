@@ -78,5 +78,29 @@
         <button type="submit" class="btn btn-primary" name="cambio_alumno">Guardar cambios</button>
     </form>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#id_carrera').change(function(){
+                var carrera_id = $(this).val();
+                $.ajax({
+                    url: 'obtener_tutores.php',
+                    type: 'post',
+                    data: {carrera_id: carrera_id},
+                    dataType: 'json',
+                    success:function(response){
+                        var len = response.length;
+                        $('#id_tutor').empty();
+                        $('#id_tutor').append("<option value=''>Selecciona un Tutor</option>");
+                        for( var i = 0; i<len; i++){
+                            var id = response[i]['id'];
+                            var nombre = response[i]['nombre'];
+                            $('#id_tutor').append("<option value='"+id+"'>"+nombre+"</option>");
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
