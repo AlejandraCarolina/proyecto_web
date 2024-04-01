@@ -6,13 +6,15 @@
     $row_carrera = $result_carrera->fetch_assoc();
 ?>
 
-<html>
+<html lang="es">
     <head>
         <title>Editar Carrera</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
     </head>
     <body>
+        <?php include "nav_bar.html"; ?>
         <div class="container mt-5">
+            <a href="listado_carreras.php" class="btn btn-secondary mb-3">Regresar</a>
             <h2>Editar Carrera</h2>
             <form action="crud.php" method="POST">
                 <input type="hidden" name="id" value="<?=$row_carrera['id']?>">

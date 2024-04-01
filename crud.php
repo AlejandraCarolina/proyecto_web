@@ -340,7 +340,7 @@ if(isset($_POST['cambio_carrera'])){
 
 //Eliminar carrera
 if (isset($_GET['eliminar_carrera'])) {
-    $id_carrera = $_GET['id_carrera'];
+    $id_carrera = $_GET['eliminar_carrera'];
 
     $sql_delete = "DELETE FROM carreras WHERE id = $id_carrera";
     $result = $conn->query($sql_delete);

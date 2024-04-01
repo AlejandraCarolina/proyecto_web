@@ -61,8 +61,8 @@
                     <td><?php echo $row['id']; ?></td>
                     <td><?php echo $row['nombre']; ?></td>
                     <td>
-                        <a href="editar_carrera.php?id=<?php echo $row['id']; ?>" class="btn btn-primary">Editar</a>
-                        <form class="d-inline" action="crud.php" method="GET">
+                        <a href="editar_carrera.php?id=<?php echo $row['id']; ?>" class="btn btn-info">Editar</a>
+                        <form class="d-inline" onsubmit="eliminar(event, <?=$row['id']?>)" method="POST">
                             <input type="hidden" name="id_carrera" value="<?php echo $row['id']; ?>">
                             <button type="submit" class="btn btn-danger" name="eliminar_carrera">Eliminar</button>
                         </form>
@@ -71,12 +71,33 @@
                 <?php endforeach; ?>
             </tbody>
         </table>
-        <a href="alta_carrera.php" class="btn btn-success">Agregar Carrera</a>
+        <a href="alta_carrera.php" class="btn btn-primary">Agregar Carrera</a>
         <form action="" method="POST" class="d-inline">
-            <input type="submit" name="export_carreras" value="Exportar a XLS" class="btn btn-info">
+            <input type="submit" name="export_carreras" value="Exportar a XLS" class="btn btn-success">
         </form>
         <br>
         <br>
     </div>
 </body>
 </html>
+
+<script>
+    // Confirmación de eliminación
+    function eliminar(event, id) {
+        event.preventDefault();
+
+        Swal.fire({
+            title: "¿Estás seguro de eliminar?",
+            text: "¡Se eliminarán las asignaciones de las materias, alumnos y tutores! ¡Además de los registros que se tengan en las asesorías y tutorías!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD3333FF",
+            confirmButtonText: "Confirmar",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = 'crud.php?eliminar_carrera='+id;
+            }
+        });
+    }
+</script>
