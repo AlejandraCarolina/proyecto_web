@@ -63,6 +63,13 @@ if(isset($_POST['cambio_tutor'])) {
     $sql = "UPDATE tutores SET nombre='$nombre', correo='$correo', id_carrera=$carrera WHERE id='$id'";
     $result = $conn->query($sql);
 
+    // Desasignar alumnos que tengan a este tutor en caso que se cambie de carrera
+    if ($_POST['cambio_tutor'] != $carrera) {
+        echo $_POST['cambio_tutor'];
+        $sql = "UPDATE alumnos SET id_tutor=NULL WHERE id_tutor = '$id'";
+        $result = $conn->query($sql);
+    }
+
     header("Location: listado_tutores.php");
 }
 

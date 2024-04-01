@@ -190,8 +190,10 @@ $result = $conn->query($sql);
 
                 Swal.fire({
                     title:  "¡Advertencia!",
-                    text:   "Falto alguna seleccion entre: carrera, materia, asesor o alumno. Asegurese de seleccionar todos los campos",
-                    icon:   "warning"
+                    text:   "Faltó alguna seleccion entre: carrera, materia, asesor o alumno. Asegurese de seleccionar todos los campos",
+                    icon:   "warning",
+                    confirmButtonColor: "#dc750e",
+                    confirmButtonText: "Confirmar",
                 });
             }
         });
