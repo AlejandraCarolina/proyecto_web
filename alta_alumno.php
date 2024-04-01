@@ -1,4 +1,4 @@
-<html>
+<html lang="es">
 <head>
     <title>Alta de Alumnos</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
@@ -18,12 +18,12 @@
             </div>
             <div class="form-group">
                 <label for="correo">Email:</label>
-                <input type="correo" class="form-control" id="correo" name="correo" required>
+                <input type="email" class="form-control" id="correo" name="correo" required>
             </div>
             <div class="form-group">
                 <label for="id_carrera">Carrera:</label>
                 <select class="form-control" id="id_carrera" name="id_carrera" required>
-                    <option value="">Selecciona una carrera</option>
+                    <option value="" selected disabled>Selecciona una carrera</option>
                     <?php
                         include 'conexion.php';
                         //consulta de id carrera
@@ -41,7 +41,7 @@
             <div class="form-group">
                 <label for="id_tutor">Tutor:</label>
                 <select class="form-control" id="id_tutor" name="id_tutor" required>
-                    <option value="">Selecciona un Tutor</option>
+                    <option value="" selected disabled>Selecciona un Tutor</option>
                 </select>
             </div>
             <button type="submit" class="btn btn-primary" name="alta_alumno">Agregar alumno</button>
@@ -61,7 +61,7 @@
                     success:function(response){
                         var len = response.length;
                         $('#id_tutor').empty();
-                        $('#id_tutor').append("<option value=''>Selecciona un Tutor</option>");
+                        $('#id_tutor').append("<option value='' selected disabled>Selecciona un Tutor</option>");
                         for( var i = 0; i<len; i++){
                             var id = response[i]['id'];
                             var nombre = response[i]['nombre'];

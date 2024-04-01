@@ -60,7 +60,7 @@ if(isset($_POST['export_tutorias'])) exportToXLS('tutorias'.(isset($alumno) ? '_
 <?php include "nav_bar.html"; ?>
 <div class="container mt-5 mb-5">
     <a href="." class="btn btn-secondary mb-2">Regresar</a>
-    <h2>Listado de Tutorías</h2>
+    <h2>Listado de Tutorías<?= isset($alumno) ? ' de '.$d_alumno['nombre'] : '' ?></h2>
     <table class="table">
         <thead>
         <tr>
@@ -86,8 +86,8 @@ if(isset($_POST['export_tutorias'])) exportToXLS('tutorias'.(isset($alumno) ? '_
                 <td><?=$row['observaciones']?></td>
                 <td><?=$row['fecha_tutoria']?></td>
                 <td>
-                    <a href="editar_tutoria.php?id=<?=$row['id']?>" class="btn btn-info">Editar</a>
                     <form class="d-inline" onsubmit="eliminar(event, <?=$row['id']?>)" method="POST">
+                        <a href="editar_tutoria.php?id=<?=$row['id']?>" class="btn btn-info">Editar</a>
                         <button type="submit" class="btn btn-danger">Eliminar</button>
                     </form>
                 </td>

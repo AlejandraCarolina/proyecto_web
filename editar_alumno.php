@@ -1,7 +1,8 @@
-<html>
+<html lang="es">
 <head>
     <title>Editar Alumno</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 </head>
 <body>
 <?php include "nav_bar.html"; ?>
@@ -22,7 +23,7 @@
             $alumno = $result_alumno->fetch_assoc();
         } else {
             echo "No se encontró ningún alumno con ese ID.";
-            exit; 
+            exit;
         }
     } else {
         echo "ID del alumno no proporcionado.";
@@ -30,7 +31,7 @@
     }
     ?>
     <form action="crud.php" method="POST">
-        <input type="hidden" name="id_alumno" value="<?php echo $id_alumno; ?>">
+        <input type="hidden" name="id_alumno" id="id_alumno" value="<?php echo $id_alumno; ?>">
         <div class="form-group">
             <label for="matricula">Matricula:</label>
             <input type="text" class="form-control" id="matricula" name="matricula" value="<?php echo $alumno['matricula']; ?>" required>
@@ -46,15 +47,15 @@
         <div class="form-group">
             <label for="id_carrera">Carrera:</label>
             <select class="form-control" id="id_carrera" name="id_carrera" required>
-                <option value="">Selecciona una carrera</option>
+                <option value="" selected disabled>Selecciona una carrera</option>
                 <?php
                 // Consulta para obtener las carreras
                 $sql_carrera = "SELECT * FROM carreras";
                 $result_carrera = $conn->query($sql_carrera);
 
                 while($row = $result_carrera->fetch_assoc()) {
-                    $selected = ($row['id'] == $alumno['id_carrera']) ? 'selected' : '';
-                    echo "<option value='".$row['id']."' ".$selected.">".$row['nombre']."</option>";
+//                    $selected = ($row['id'] == $alumno['id_carrera']) ? 'selected' : '';
+                    echo "<option value='".$row['id']."'>".$row['nombre']."</option>";
                 }
                 ?>
             </select>
@@ -62,45 +63,56 @@
         <div class="form-group">
             <label for="id_tutor">Tutor:</label>
             <select class="form-control" id="id_tutor" name="id_tutor" required>
-                <option value="">Selecciona un Tutor</option>
-                <?php
-                // Consulta para obtener los tutores
-                $sql_tutor = "SELECT * FROM tutores";
-                $result_tutor = $conn->query($sql_tutor);
-
-                while($row = $result_tutor->fetch_assoc()) {
-                    $selected = ($row['id'] == $alumno['id_tutor']) ? 'selected' : '';
-                    echo "<option value='".$row['id']."' ".$selected.">".$row['nombre']."</option>";
-                }
-                ?>
+                <option value="" selected disabled>Selecciona un Tutor</option>
             </select>
         </div>
         <button type="submit" class="btn btn-primary" name="cambio_alumno">Guardar cambios</button>
     </form>
 </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
-        $(document).ready(function(){
-            $('#id_carrera').change(function(){
-                var carrera_id = $(this).val();
-                $.ajax({
-                    url: 'obtener_tutores.php',
-                    type: 'post',
-                    data: {carrera_id: carrera_id},
-                    dataType: 'json',
-                    success:function(response){
-                        var len = response.length;
-                        $('#id_tutor').empty();
-                        $('#id_tutor').append("<option value=''>Selecciona un Tutor</option>");
-                        for( var i = 0; i<len; i++){
-                            var id = response[i]['id'];
-                            var nombre = response[i]['nombre'];
-                            $('#id_tutor').append("<option value='"+id+"'>"+nombre+"</option>");
-                        }
-                    }
-                });
-            });
-        });
-    </script>
 </body>
 </html>
+
+<script>
+    $(document).ready(function(){
+        // Instanciar selects
+        const carrera = $('#id_carrera');
+        const tutor = $('#id_tutor');
+
+        // realizar consulta de datos del alumno
+        let data_al;
+        $.ajax({
+            type: 'POST',
+            url: 'obtener_tutores.php',
+            data: {datos_alumno: $('#id_alumno').val()},
+            dataType: 'json',
+            success: function (data) {
+                carrera.val(data.id_carrera).trigger('change');
+                data_al = data;
+            }
+        });
+
+        // si se cambia la carrera, cambiar que tutor se puede asignar al alumno
+        carrera.change(function(){
+            var carrera_id = $(this).val();
+            $.ajax({
+                url: 'obtener_tutores.php',
+                type: 'post',
+                data: {carrera_id: carrera_id},
+                dataType: 'json',
+                success:function(response){
+                    var len = response.length;
+                    tutor.empty();
+                    tutor.append("<option value='' selected disabled>Selecciona un Tutor</option>");
+                    for( var i = 0; i<len; i++){
+                        var id = response[i]['id'];
+                        var nombre = response[i]['nombre'];
+                        tutor.append("<option value='"+id+"'>"+nombre+"</option>");
+
+                        // seleccion de tutor
+                        if(data_al.id_tutor === id) tutor.val(id).trigger('change');
+                    }
+                }
+            });
+        });
+    });
+</script>
